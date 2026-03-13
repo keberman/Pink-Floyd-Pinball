@@ -1,0 +1,145 @@
+#config_version=6
+
+#  devices/switches.yaml
+#  ----------------------
+#  FAST BOARDS
+#  Neuron
+#  IO 0024 CABINET IO BOARD
+#  IO 3208 LOWER THIRD IO BOARD
+#  IO 1616 UPPER PLAYFIELD IO BOARD
+
+switches:
+
+#  -----  IO 0024  :  cabinet inputs  -----
+
+
+  s_start_button:
+    number: 0024-8
+    tags: start
+
+  s_left_flipper_button:
+    number: 0024-9
+    tags: left_flipper
+
+  s_coin_door_switch:
+    number: 0024-10
+    
+  s_right_flipper_button:
+    number: 0024-16
+    tags: right_flipper
+
+  s_launch_button:
+    number: 0024-17
+
+  #  s_tilt_switch:
+    #  number: 0024-18
+    #  tags: tilt
+
+#  -----  IO 3208  :  bottom third inputs  -----
+
+  s_left_flipper:
+    number: 3208-0
+    tags: left_flipper
+
+  s_right_flipper:
+    number: 3208-1
+    tags: right_flipper
+
+  s_left_sling:
+    number: 3208-2
+
+  s_right_sling:
+    number: 3208-3
+
+  s_left_outlane:
+    number: 3208-4
+
+  s_left_inlane:
+    number: 3208-5
+
+  s_right_inlane:
+    number: 3208-6
+
+  s_right_outlane:
+    number: 3208-7
+
+  #  s_stand_up_a:
+    #  number: 3208-8
+
+  #  s_stand_n:
+    #  number: 3208-9
+
+  #  s_stand_up_i:
+    #  number: 3208-10
+
+  #  s_stand_up_m:
+    #  number: 3208-11
+
+  #  s_stand_up_a:
+    #  number: 3208-12
+
+  #  s_stand_up_l:
+    #  number: 3208-13
+
+  #  s_stand_up_s:
+    #  number: 3208-14
+
+  #  s_trough_opto_1:
+    #  number: 3208-24
+
+  #  s_trough_opto_2:
+    #  number: 3208-25
+
+  #  s_trough_opto_3:
+    #  number: 3208-26
+
+  #  s_trough_opto_4:
+    #  number: 3208-27
+
+  #  s_trough_opto_5:
+    #  number: 3208-28
+
+  #  s_trough_opto_6:
+    #  number: 3208-29
+
+
+#  -----  IO 1616  :  upper playfield inputs  -----
+
+  #  s_left_spinner:
+    #  number: 1616-0
+
+  #  s_right_spinner:
+    #  number: 1616-1
+
+  #  s_upper_left_rollover:
+    #  number: 1616-2
+
+  #  s_upper_center_rollover:
+    #  number: 1616-3
+
+  #  s_upper_right_rollover:
+    #  number: 1616-4
+
+  #  s_pop_1:
+    #  number: 1616-5
+
+  #  s_pop_2:
+    #  number: 1616-6
+
+  #  s_pop_3:
+    #  number: 1616-7
+
+  #  s_drop_front_left:
+    #  number: 1616-8
+
+  #  s_drop_front_center:
+    #  number: 1616-9
+
+  #  S_drop_front_right:
+    #  number: 1616-10
+
+  #  s_drop_rear_left:
+    #  number: 1616-11
+
+  #  s_drop_rear_right:
+    #  number: 1616-12

@@ -1,0 +1,32 @@
+loops:
+- !!python/tuple
+  - JAN
+  - 42
+score:
+- !!python/tuple
+  - KING
+  - 30997090
+- !!python/tuple
+  - AAA
+  - 14783840
+- !!python/tuple
+  - OCTO
+  - 13164020
+- !!python/tuple
+  - OCTO
+  - 13145340
+- !!python/tuple
+  - KED
+  - 8071840
+- !!python/tuple
+  - OCTO
+  - 8017500
+- !!python/tuple
+  - OCTO
+  - 7897640
+- !!python/tuple
+  - AAA
+  - 7724600
+- !!python/tuple
+  - OCTO
+  - 7654960

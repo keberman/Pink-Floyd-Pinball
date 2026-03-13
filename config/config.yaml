@@ -1,0 +1,380 @@
+#config_version=6
+
+hardware:
+  platform: fast
+  driverboards: fast
+
+machine:
+  balls_installed: 1
+  min_balls: 1
+
+displays:
+  window:
+    width: 800
+    height: 600
+
+#slides:
+#  welcome_slide:
+#    widgets:
+#      - type: text
+#        text: PINBALL!
+
+slide_player:
+  mode_attract_started: attract
+
+fast:
+  net:
+    controller: neuron
+    port: auto
+    debug: false
+    io_loop:
+      cab:
+        model: FP-I/O-0024
+        order: 1
+      pf:
+        model: FP-I/O-3208
+        order: 2
+      aux:
+        model: FP-I/O-1616
+        order: 3
+
+#logging:
+#  console:
+#    level: warning
+#  file:
+#    path: logs/mpf.log
+#    level: debug
+
+switches:
+  s_start_button:
+    number: cab-8
+    debounce: normal
+    tags: start
+  s_left_flipper:
+    number: cab-9
+    debounce: quick
+    tags: left_flipper
+  s_right_flipper:
+    number: cab-16
+    debounce: quick
+    tags: right_flipper
+  s_launch_button:
+    number: cab-17
+    debounce: normal
+    tags: launch
+
+#  s_eos_left:
+#    number: pf-0
+#    debounce: quick
+#    tags: left_flipper_eos
+#  s_eos_right:
+#    number: pf-1
+#    debounce: quick
+#    tags: right_flipper_eos
+  s_sling_left:
+    number: pf-2
+    debounce: normal
+  s_sling_right:
+    number: pf-3
+    debounce: normal
+  s_left_outlane:
+    number: pf-4
+    debounce: normal
+    tags: outlane_left
+  s_left_inlane:
+    number: pf-5
+    debounce: normal
+    tags: inlane_left
+  s_right_inlane:
+    number: pf-6
+    debounce: normal
+    tags: inlane_right
+  s_right_outlane:
+    number: pf-7
+    debounce: normal
+    tags: outlane_right
+  s_a:
+    number: pf-8
+    debounce: normal
+  s_n:
+    number: pf-9
+    debounce: normal
+  s_i:
+    number: pf-10
+    debounce: normal
+  s_m:
+    number: pf-11
+    debounce: normal
+  s_aa:
+    number: pf-12
+    debounce: normal
+  s_l:
+    number: pf-13
+    debounce: normal
+  s_s:
+    number: pf-14
+    debounce: normal
+  s_trough_1:
+    number: pf-16
+    type: nc
+    debounce: normal
+  s_trough_2:
+    number: pf-17
+    type: nc
+    debounce: normal
+  s_trough_3:
+    number: pf-18
+    type: nc
+    debounce: normal
+  s_trough_4:
+    number: pf-19
+    type: nc
+    debounce: normal
+  s_trough_5:
+    number: pf-20
+    type: nc
+    debounce: normal
+  s_trough_6:
+    number: pf-21
+    type: nc
+    debounce: normal
+  s_trough_jam:
+    number: pf-22
+    type: nc
+    debounce: normal
+  s_shooter_lane:
+    number: pf-23
+    debounce: normal
+    tags: shooter_lane
+  s_left_upper_ro:
+    number: pf-24
+    debounce: normal
+  s_right_upper_ro:
+    number: pf-25
+    debounce: normal
+  s_left_hs_spinner:
+    number: pf-26
+    debounce: quick
+  s_right_hs_spinner:
+    number: pf-27
+    debounce: quick
+  s_db_1:
+    number: pf-28
+    debounce: normal
+  s_db_2:
+    number: pf-29
+    debounce: normal
+  s_db_3:
+    number: pf-30
+    debounce: normal
+
+  s_fldt:
+    number: aux-0
+    debounce: normal
+  s_frdt:
+    number: aux-1
+    debounce: normal
+  s_opto_1:
+    number: aux-2
+    type: nc
+    debounce: normal
+  s_opto_2:
+    number: aux-3
+    type: nc
+    debounce: normal
+  s_opto_3:
+    number: aux-4
+    type: nc
+    debounce: normal
+  s_bdt:
+    number: aux-5
+    debounce: normal
+  s_left_spinner:
+    number: aux-6
+    debounce: quick
+  s_right_spinner:
+    number: aux-7
+    debounce: quick
+  s_opto_4:
+    number: aux-8
+    type: nc
+    debounce: normal
+  s_opto_5:
+    number: aux-9
+    type: nc
+    debounce: normal
+  s_opto_6:
+    number: aux-10
+    type: nc
+    debounce: normal
+  s_subway_opto:
+    number: aux-11
+    type: nc
+    debounce: normal
+  s_vuk_opto:
+    number: aux-12
+    type: nc
+    debounce: normal
+  s_pop_1:
+    number: aux-13
+    debounce: quick
+  s_pop_2:
+    number: aux-14
+    debounce: quick
+
+coils:
+  c_flipper_left_main:
+    number: pf-6
+    default_pulse_ms: 25
+  c_flipper_left_hold:
+    number: pf-7
+    allow_enable: true
+  c_flipper_right_main:
+    number: pf-4
+    default_pulse_ms: 25
+  c_flipper_right_hold:
+    number: pf-5
+    allow_enable: true
+
+  c_sling_left:
+    number: pf-2
+  c_sling_right:
+    number: pf-1
+
+  c_trough_eject:
+    number: pf-0
+    default_pulse_ms: 20
+  c_auto_plunger:
+    number: pf-3
+    default_pulse_ms: 30
+
+  c_fldt_dog:
+    number: aux-0
+    default_pulse_ms: 50
+    max_pulse_ms: 100
+  c_frdt_pig:
+    number: aux-1
+    default_pulse_ms: 50
+    max_pulse_ms: 100
+  c_3_bank_upper:
+    number: aux-2
+    default_pulse_ms: 50
+    max_pulse_ms: 100
+  c_bdt:
+    number: aux-3
+    default_pulse_ms: 50
+    max_pulse_ms: 100
+  c_post_1:
+    number: aux-4
+    default_pulse_ms: 30
+    max_pulse_ms: 60
+  c_post_2:
+    number: aux-5
+    default_pulse_ms: 30
+    max_pulse_ms: 60
+  c_pop_1:
+    number: aux-6
+    default_pulse_ms: 20
+    max_pulse_ms: 35
+  c_pop_2:
+    number: aux-7
+    default_pulse_ms: 20
+    max_pulse_ms: 35
+  c_vuk:
+    number: aux-9
+    default_pulse_ms: 35
+    max_pulse_ms: 60
+  c_3_bank_lower:
+    number: aux-10
+    default_pulse_ms: 50
+    max_pulse_ms: 100
+  c_fldt_knockdown:
+    number: aux-11
+    default_pulse_ms: 30
+    max_pulse_ms: 0.6
+  c_frdt_knockdown:
+    number: aux-12
+    default_pulse_ms: 30
+    max_pulse_ms: 0.6
+  c_bdt_knockdown:
+    number: aux-13
+    default_pulse_ms: 30
+    max_pulse_ms: 0.6
+
+ball_devices:
+  bd_trough:
+    ball_switches: s_trough_1, s_trough_2, s_trough_3, s_trough_4, s_trough_5, s_trough_6
+    jam_switch: s_trough_jam
+    eject_coil: c_trough_eject
+    eject_targets: bd_shooter_lane
+    tags: trough, home, drain
+    eject_timeouts: 3s
+
+  bd_shooter_lane:
+    ball_switches: s_shooter_lane
+    eject_coil: c_auto_plunger
+    eject_timeouts: 3s
+    eject_targets: playfield
+    player_controlled_eject_event: s_launch_button_active
+    tags: playfield_active_switch
+
+  bd_vuk:
+    ball_switches: s_vuk_opto
+    eject_coil: c_vuk
+    eject_targets: playfield
+    tags: vuk
+
+playfields:
+  playfield:
+    tags: default
+    default_source_device: bd_shooter_lane
+
+flippers:
+  left_flipper:
+    main_coil: c_flipper_left_main
+    hold_coil: c_flipper_left_hold
+    activation_switch: s_left_flipper
+#    eos_switch: s_eos_left
+#    enable_events: machine_reset_phase_3
+#    disable_events: service_mode_entered
+
+  right_flipper:
+    main_coil: c_flipper_right_main
+    hold_coil: c_flipper_right_hold
+    activation_switch: s_right_flipper
+#    eos_switch: s_eos_right
+#    enable_events: machine_reset_phase_3
+#    disable_events: service_mode_entered
+
+autofire_coils:
+  sling_left:
+    coil: c_sling_left
+    switch: s_sling_left
+    enable_events: ball_started
+    coil_overwrite:
+      pulse_ms: 5
+  sling_right:
+    coil: c_sling_right
+    switch: s_sling_right
+    enable_events: ball_started
+    coil_overwrite:
+      pulse_ms: 5
+  pop_1:
+    coil: c_pop_1
+    switch: s_pop_1
+    enable_events: ball_started
+  pop_2:
+    coil: c_pop_2
+    switch: s_pop_2
+    enable_events: ball_started
+
+modes:
+  - base
+
+coil_player:
+  s_launch_button_active:
+    c_vuk: pulse
+
+event_player:
+  init_phase_3: start_mode_attract
+  init_done: machine_reset_phase_3
