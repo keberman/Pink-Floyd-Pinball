@@ -8,20 +8,6 @@ machine:
   balls_installed: 1
   min_balls: 1
 
-displays:
-  window:
-    width: 800
-    height: 600
-
-#slides:
-#  welcome_slide:
-#    widgets:
-#      - type: text
-#        text: PINBALL!
-
-slide_player:
-  mode_attract_started: attract
-
 fast:
   net:
     controller: neuron
@@ -369,6 +355,7 @@ autofire_coils:
     enable_events: ball_started
 
 modes:
+  - attract
   - base
 
 coil_player:
@@ -378,3 +365,8 @@ coil_player:
 event_player:
   init_phase_3: start_mode_attract
   init_done: machine_reset_phase_3
+
+virtual_platform_start_active_switches:
+  - s_trough_1
+  - s_trough_2
+  - s_trough_3

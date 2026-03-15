@@ -1,30 +1,30 @@
-[gd_scene load_steps=2 format=3 uid="uid://b5puffrfnfa0l"]
+[gd_scene load_steps=3 format=3 uid="uid://b5puffrfnfa0l"]
 
 [ext_resource type="Script" path="res://addons/mpf-gmc/classes/mpf_slide.gd" id="1_qdgl7"]
+[ext_resource type="Texture2D" uid="uid://bx5i5nabjoe31" path="res://images/pink-floyd-pictures-for-desktop-wallpaper-preview.jpg" id="3_d351m"]
 
 [node name="Attract" type="Control"]
-custom_minimum_size = Vector2(1920, 1080)
+custom_minimum_size = Vector2(2560, 1600)
 layout_mode = 3
-anchors_preset = 0
-offset_left = 13.0
-offset_top = 15.0
-offset_right = 1933.0
-offset_bottom = 1095.0
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 script = ExtResource("1_qdgl7")
 
-[node name="ColorRect" type="ColorRect" parent="."]
-layout_mode = 0
-offset_left = -12.0
-offset_top = -14.0
-offset_right = 1908.0
-offset_bottom = 1066.0
-color = Color(0, 0, 0, 1)
+[node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(1277.5, 800.25)
+scale = Vector2(3.50412, 3.45464)
+texture = ExtResource("3_d351m")
 
-[node name="Label" type="Label" parent="ColorRect"]
-layout_mode = 0
-offset_left = 106.0
-offset_top = 121.0
-offset_right = 3117.0
-offset_bottom = 946.0
-theme_override_font_sizes/font_size = 250
-text = "Pink Floyd The ALL!!!"
+[node name="Label" type="Label" parent="Sprite2D"]
+anchors_preset = -1
+anchor_right = 0.415
+anchor_bottom = 0.217
+offset_left = -353.0
+offset_top = -226.0
+offset_right = -388.12
+offset_bottom = -261.471
+theme_override_font_sizes/font_size = 40
+text = "PRESS START"

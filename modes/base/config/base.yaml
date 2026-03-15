@@ -1,5 +1,87 @@
 #config_version=6
 #base mode config file
 mode:
-  start_events: machine_reset_phase_3
+  start_events: ball_starting
   priority: 100
+
+slide_player:
+  mode_base_started: base
+
+sound_player:
+  mode_base_started:
+    young_lust:
+      bus: music
+
+variable_player:
+  #rollovers
+  s_left_inlane_active:
+    score: 100
+  s_left_outlane_active:
+    score: 100
+  s_right_inlane_active:
+    score: 100
+  s_right_outlane_active:
+    score: 100
+  s_left_upper_ro_active:
+    score: 100
+  s_right_upper_ro_active:
+    score: 100
+  #spinners
+  s_left_spinner_active:
+    score: 100
+  s_right_spinner_active:
+    score: 100
+  s_left_hs_spinner_active:
+    score: 100
+  s_right_hs_spinner_active:
+    score: 100
+  #standups
+  s_a_active:
+    score: 500
+  s_n_active:
+    score: 500
+  s_i_active:
+    score: 500
+  s_m_active:
+    score: 500
+  s_aa_active:
+    score: 500
+  s_l_active:
+    score: 500
+  s_s_active:
+    score: 500
+  s_db_1_active:
+    score: 500
+  s_db_2_active:
+    score: 500
+  s_db_3_active:
+    score: 500
+  #drops
+  s_opto_1_active:
+    score: 1000
+  s_opto_2_active:
+    score: 1000
+  s_opto_3_active:
+    score: 1000
+  s_opto_4_active:
+    score: 1000
+  s_opto_5_active:
+    score: 1000
+  s_opto_6_active:
+    score: 1000
+  #bumpers
+  s_pop_1_active:
+    score: 500
+  s_pop_2_active:
+    score: 500
+  #slings
+  s_sling_left_active:
+    score: 100
+  s_sling_right_active:
+    score: 100
+  #hammer
+  s_subway_opto_active:
+    score: 3000
+  #vuk
+  s_vuk_opto_active:
+    score: 5000

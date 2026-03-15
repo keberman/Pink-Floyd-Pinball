@@ -2,14 +2,18 @@
 #attract mode config file
 
 
+mode_settings:
+  selectable_items:
+    - title
+    - credits
+    - mpf_logo
+  next_item_events: s_right_flipper_active
+  previous_item_events: s_left_flipper_active
+
 slide_player:
   mode_attract_started: attract
 
-  mode_attract_stopping:
-    attract:
-      action: remove
-      
-event_player:
-  s_rght_flipper_active: right_full
-  s_right_flipper_inactive: right_rest
-  mode_mode_select_carousel_started: move_to_0
+sound_player:
+  mode_attract_started:
+    welcome_to_the_machine:
+      bus: music
