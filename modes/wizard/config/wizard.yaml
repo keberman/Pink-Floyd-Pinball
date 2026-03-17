@@ -1,0 +1,11 @@
+#config_version=6
+
+#wizard mode. complete all 5 main modes to start. the wall, dark side of the moon,
+#animals, wish you were here and division bell. shoot vuk to start. mode will be an 
+#unlimited 4 ball multiball. 20 seconds will be allotted to each main mode mission with
+#increased scores. the final 20 seconds will be an eclipse frenzy where every shot
+#is lit for a super jackpot.
+mode:
+  start_events: start_wizard
+  stop_events: stop_wizard
+  priority: 200

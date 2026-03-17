@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=3 uid="uid://cpxuvru1i2grs"]
+
+[ext_resource type="Script" path="res://addons/mpf-gmc/classes/mpf_slide.gd" id="1_q8xiv"]
+
+[node name="TheWall" type="Control"]
+layout_mode = 3
+anchors_preset = 0
+script = ExtResource("1_q8xiv")

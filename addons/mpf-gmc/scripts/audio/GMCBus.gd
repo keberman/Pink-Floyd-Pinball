@@ -3,26 +3,31 @@ class_name GMCBus
 
 enum BusType { SOLO, SEQUENTIAL, SIMULTANEOUS }
 
+signal sound_play(sound_name, settings)
+
 var channels: Array[GMCChannel] = []
 var type: BusType = BusType.SIMULTANEOUS
 var queue
 var duckings: Array[DuckSettings] = []
+var mpf: MPFGMC
 
 var _full_volume_db: float
 var _bus_index: int
 var _active_duck: Tween
 var _duck_release_timer: Timer
 
-func _init(n: String, log_level: int = 30):
+func _init(mpf_instance: MPFGMC, n: String, log_level: int = 30):
+	self.mpf = mpf_instance
 	self.name = n
 	self.configure_logging("Bus<%s>" % self.name, log_level)
 	# Store the target restore volume for post-ducks
 	self._bus_index = AudioServer.get_bus_index(self.name)
 	assert(self._bus_index != -1, "No audio bus %s configured in Godot Audio layout." % n)
 	self._full_volume_db = AudioServer.get_bus_volume_db(self._bus_index)
+	self.log.debug("Initialized audio bus '%s' at index %s with volume %s" % [self.name, self._bus_index, db_to_linear(self._full_volume_db)])
 
 func create_channel(channel_name: String) -> GMCChannel:
-	var channel = GMCChannel.new(channel_name, self)
+	var channel = GMCChannel.new(self.mpf, channel_name, self)
 	self.channels.append(channel)
 	# Channels have tweens so must be in the tree
 	self.add_child(channel)
@@ -59,9 +64,9 @@ func duck(settings) -> void:
 	# Track which duck we are timing
 	self._duck_release_timer.set_meta("ducking", settings)
 	self._duck_release_timer.start(settings.duration)
-	self.log.info("Ducking %s by %s over %ss, will last %s", [self.name, settings.attenuation, settings.attack, settings.duration])
 
 func duck_release() -> void:
+	# TODO: Use a uuid to identify which ducking to release
 	# Remove this duck from the list of duckings
 	var last_duck: DuckSettings = self._duck_release_timer.get_meta("ducking")
 	self.duckings.erase(last_duck)
@@ -96,6 +101,7 @@ func duck_release() -> void:
 		self._duck_release_timer.remove_meta("ducking")
 
 func set_bus_volume(value: float):
+	self.log.debug("Setting bus volume to %s", value)
 	AudioServer.set_bus_volume_db(self._bus_index, value)
 
 func set_bus_volume_full(value: float):
@@ -134,14 +140,16 @@ func play(filename: String, settings: Dictionary = {}) -> void:
 	# If the available channel we got back is already playing, it's playing this file
 	# and we don't need to do anything further.
 	if available_channel and available_channel.playing:
-		self.log.debug("Recevied available channel that's already playing, no-op.")
+		self.log.debug("Received available channel that's already playing, no-op.")
 		return
 
 	# If this is a solo bus, stop any other playback
 	if self.type == BusType.SOLO:
 		for c in self.channels:
-			if c.playing and c != available_channel:
-				c.stop_with_settings(settings)
+			if c.playing and c != available_channel and not c.get_meta("is_stopping", false):
+				# Do not pass the settings, because that includes actions and
+				# fade times that should not apply to the stopping track.
+				c.stop_with_settings()
 
 	if not available_channel:
 		# Queue the filename if this bus type has a queue
@@ -157,6 +165,7 @@ func play(filename: String, settings: Dictionary = {}) -> void:
 		self.log.error("Failed to load stream for filepath '%s' on channel %s", [filepath, available_channel])
 		return
 	var stream = available_channel.play_with_settings(settings)
+	self.sound_play.emit(filename, settings)
 
 	if settings.get("ducking", false):
 		if stream is AudioStreamRandomizer:
@@ -167,6 +176,7 @@ func play(filename: String, settings: Dictionary = {}) -> void:
 		# If this came from an MPFSoundAsset the ducking is already configured
 		var duck_settings: DuckSettings = settings.ducking if settings.ducking is DuckSettings else DuckSettings.new(settings.ducking)
 		duck_settings.calculate_release_time(Time.get_ticks_msec(), stream)
+		# TODO: Generate a uuid for the ducking and append to stream metadata
 		duck_settings.bus.duck(duck_settings)
 
 func clear_context(context_name: String) -> void:
@@ -176,6 +186,7 @@ func clear_context(context_name: String) -> void:
 		channel.stream.get_meta("context") == context_name and \
 		channel.playing and not channel.get_meta("is_stopping", false):
 			channel.stop_with_settings()
+	# TODO: Only clear the ducking of streams impacted by the context
 	self._abort_ducking_check()
 
 func clear_queue() -> void:
@@ -243,12 +254,23 @@ func _abort_ducking_check():
 	self.duck_release()
 
 func _create_duck_tween(attenuation: float, duration: float) -> Tween:
+	if (attenuation < 0 or attenuation > 1):
+		self.log.warning("Ducking attenuation settings have CHANGED from decibal values to linear. " +
+						 "Please specify attenuation as a value from 0.0 (no change) to 1.0 (full mute)")
+		attenuation = 0.0
 	var duck_tween = self.create_tween()
+	# TODO: Integrate default values
+	var full_volume = db_to_linear(self._full_volume_db)
+	# Attenuation value is the percentage of full volume to reduce.
+	var target_volume = full_volume * (1.0 - attenuation)
+	var target_volume_db = linear_to_db(target_volume)
+
 	duck_tween.tween_method(self.set_bus_volume,
 		# Always use the current level in case we're interrupting
 		AudioServer.get_bus_volume_db(self._bus_index),
-		# TODO: Integrate default values
-		self._full_volume_db - attenuation,
+		# The attenuation will be a negative value (-inf to 0.0) so *add* it
+		# to reduce the effective volume.
+		target_volume_db,
 		duration
 	).set_trans(Tween.TRANS_LINEAR).set_ease(Tween.EASE_IN)
 	return duck_tween
@@ -264,7 +286,7 @@ func _find_available_channel(filepath: String, settings: Dictionary, ignore_exis
 				if channel.has_meta("tween") and is_instance_valid(channel.get_meta("tween")):
 					# Stop the tween
 					var tween = channel.get_meta("tween")
-					tween.stop_all()
+					tween.stop()
 					# AVW: DISABLING DURING REFACTOR
 					#self._on_fade_complete(channel, tween,  "cancel")
 				# If the channel does not have a tween, let it continue playing

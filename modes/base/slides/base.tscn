@@ -19,6 +19,7 @@ scale = Vector2(1.69566, 1.50511)
 texture = ExtResource("2_5w8y4")
 
 [node name="player_score" type="Label" parent="."]
+layout_mode = 0
 offset_left = 1609.79
 offset_top = 1162.03
 offset_right = 2133.79

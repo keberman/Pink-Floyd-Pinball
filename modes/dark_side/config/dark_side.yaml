@@ -1,0 +1,10 @@
+#config_version=6
+
+#dark side mode. shoot left and right ramps 4 times to light dark side. start 60
+#second timer to shoot vuk to start mode. complete 4 ramp shots on either ramp within
+#60 seconds to complete mode.
+
+mode:
+  start_events: start_dark_side
+  stop_events: stop_dark_side
+  priority: 200

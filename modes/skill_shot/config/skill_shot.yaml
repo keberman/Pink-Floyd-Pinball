@@ -1,0 +1,8 @@
+#config_version=6
+
+#skill shot mode. undefined at the moment. will be live upon ball launch.
+
+mode:
+  start_events: start_skill_shot
+  stop_events: stop_skill_shot
+  priority: 200

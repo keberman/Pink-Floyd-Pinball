@@ -1,0 +1,10 @@
+#config_version=6
+
+#wish_you_were_here mode. spin all 4 wywh spinners 20 times. start 60 second timer
+#to shoot vuk. successful vuk shot starts mode. accumulate a total of 100 spins within
+#60 seconds with any combination of the 4 spinners to complete mode.
+
+mode:
+  start_events: start_wish_you_were_here
+  stop_events: stop_wish_you_were_here
+  priority: 200

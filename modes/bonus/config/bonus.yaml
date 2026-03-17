@@ -1,0 +1,8 @@
+#config_version=6
+
+#bonus end ball mode. calculate bonus based on multiplier earned.
+
+mode:
+  start_events: start_bonus
+  stop_events: stop_bonus
+  priority: 200

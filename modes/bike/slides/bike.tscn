@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=3 uid="uid://b86mnc3nhda24"]
+
+[ext_resource type="Script" path="res://addons/mpf-gmc/classes/mpf_slide.gd" id="1_w3v16"]
+
+[node name="Bike" type="Control"]
+layout_mode = 3
+anchors_preset = 0
+script = ExtResource("1_w3v16")

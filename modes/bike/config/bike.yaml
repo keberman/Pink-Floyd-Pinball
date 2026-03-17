@@ -1,0 +1,9 @@
+#config_version=6
+
+#bike side mode. light the 4 inlane and outlanes fully twice.
+#follow the lit inserts to chase random shots through the orbits and ramps.
+
+mode:
+  start_events: start_bike
+  stop_events: stop_bike
+  priority: 200

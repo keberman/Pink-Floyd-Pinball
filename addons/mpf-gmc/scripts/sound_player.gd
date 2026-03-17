@@ -1,6 +1,6 @@
 # Copyright 2021 Paradigm Tilt
 
-extends LoggingNode
+extends GMCCoreScriptNode
 
 signal marker(event_name: String)
 
@@ -16,7 +16,7 @@ func initialize(config: ConfigFile, log_level: int = 30) -> void:
 	self.configure_logging("SoundPlayer")
 	for i in range(0, AudioServer.bus_count):
 		var bus_name: String = AudioServer.get_bus_name(i)
-		self.buses[bus_name] = GMCBus.new(bus_name, log_level)
+		self.buses[bus_name] = GMCBus.new(self.mpf, bus_name, log_level)
 		# Buses have tweens so must be in the tree
 		self.add_child(self.buses[bus_name])
 	if config.has_section("sound_system"):
@@ -40,8 +40,8 @@ func initialize(config: ConfigFile, log_level: int = 30) -> void:
 				self.default_duck_bus = self.buses[target_bus_name]
 
 func _ready() -> void:
-	MPF.game.volume.connect(self._on_volume)
-	MPF.server.connect("clear", self._on_clear_context)
+	self.mpf.game.volume.connect(self._on_volume)
+	self.mpf.server.connect("clear", self._on_clear_context)
 	# Set names to help debugging
 	duckAttackTimer.name = "DuckAttackTimer"
 	duckReleaseTimer.name = "DuckReleaseTimer"
@@ -68,24 +68,16 @@ func play_sounds(s: Dictionary) -> void:
 	for asset in s.settings.keys():
 		var settings: Dictionary = s.settings[asset]
 
-		assert(MPF.media.sounds.has(asset), "Unknown sound file or resource '%s'" % asset)
+		assert(self.mpf.media.sounds.has(asset), "Unknown sound file or resource '%s'" % asset)
 		# A key can override the default value
 		if not settings.get("key"):
 			settings["key"] = asset
 
-		var bus: GMCBus = self.buses[settings["bus"]] if settings.get("bus") else self.default_bus
-		var action: String = settings.get("action", "play")
-
-		# A key is all we need to stop
-		if action == "stop" or action == "loop_stop":
-			# TODO: Accept GMCBus as a stop param?
-			bus.stop(settings.key, settings)
-			return
-
-		var config: Variant = MPF.media.get_sound_instance(asset)
+		var config: Variant = self.mpf.media.get_sound_instance(asset)
 		if not config:
 			printerr("Unable to find sound instance for asset '%s'" % asset)
 			return
+
 		# If the result is a stream, there's no custom asset resource
 		if config is AudioStream:
 			settings["file"] = config.resource_path
@@ -93,7 +85,7 @@ func play_sounds(s: Dictionary) -> void:
 		elif config is MPFSoundAsset:
 			assert(config.stream, "Sound asset %s is missing a Stream resource." % asset)
 			settings["file"] = config.stream.resource_path
-			for prop in [ "bus", "fade_in", "fade_out", "start_at", "max_queue_time"]:
+			for prop in [ "bus", "fade_in", "fade_out", "loops", "start_at", "max_queue_time"]:
 				# Any values passed from the event have priority, only populate
 				# asset property values not defined from the event.
 				if settings.get(prop) == null and config.get(prop):
@@ -106,6 +98,23 @@ func play_sounds(s: Dictionary) -> void:
 				settings.markers = config.markers
 		else:
 			assert(false, "Cannot play sound of class %s" % config.get_class())
+
+		if OS.has_feature("debug"):
+			if settings.get("bus"):
+				if not settings["bus"] in self.buses:
+					self.log.error("Unknown bus '%s' for playing sound with settings %s" % [settings["bus"], settings])
+					return
+			elif not self.default_bus:
+				self.log.error("Sound played without bus param and no default bus is specified: %s" % settings)
+				return
+		var bus: GMCBus = self.buses[settings["bus"]] if settings.get("bus") else self.default_bus
+		var action: String = settings.get("action", "play")
+
+		# A key is all we need to stop
+		if action == "stop" or action == "loop_stop":
+			# TODO: Accept GMCBus as a stop param?
+			bus.stop(settings.key, settings)
+			return
 
 		var file: String = settings.get("file", asset)
 		settings['context'] = settings.get("custom_context", s.context)

@@ -1,0 +1,11 @@
+#config_version=6
+
+#the_wall mode. knock down all 6 upper drop targets to start a 60 second timer to
+#shoot the vuk. successful vuk shot starts mode. knock all 6 targets down again and
+#follow up with a successful shot to the hammers entrance from the front or rear
+#within 60 seconds for mode completion.
+
+mode:
+  start_events: start_the_wall
+  stop_events: stop_the_wall
+  priority: 200

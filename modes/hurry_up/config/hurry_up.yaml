@@ -1,0 +1,8 @@
+#config_version=6
+
+#hurry up mode. undefined at the moment.
+
+mode:
+  start_events: hurry_up
+  stop_events: hurry_up
+  priority: 200
