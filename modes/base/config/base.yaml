@@ -7,10 +7,10 @@ mode:
 slide_player:
   mode_base_started: base
 
-sound_player:
-  mode_base_started:
-    young_lust:
-      bus: music
+#sound_player:
+#  ball_started{current_player .ball==1}:
+#    base_radio:
+#      bus: music
 
 variable_player:
   #rollovers

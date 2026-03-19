@@ -1,59 +1,69 @@
 events:
-  game_ended: 305
-  game_started: 752
+  game_ended: 312
+  game_started: 772
 missing_switches:
-  s_a: 282
-  s_aa: 1
-  s_bdt: 9
-  s_db_1: 163
-  s_db_2: 42
-  s_db_3: 42
+  s_a: 302
+  s_aa: 3
+  s_bdt: 29
+  s_db_1: 183
+  s_db_2: 62
+  s_db_3: 62
   s_eos_left: 1
   s_eos_right: 1
-  s_fldt: 238
-  s_frdt: 238
-  s_i: 1
-  s_l: 1
+  s_fldt: 258
+  s_frdt: 258
+  s_i: 3
+  s_l: 3
   s_launch: 6
-  s_left_flipper: 1
+  s_launch_button: 1
   s_left_flipper_eos: 363
-  s_left_hs_spinner: 8
-  s_left_inlane: 1
+  s_left_hs_spinner: 1
+  s_left_inlane: 3
   s_left_inner_lane: 357
   s_left_outer_lane: 153
-  s_left_outlane: 8
+  s_left_outlane: 3
   s_left_sling: 363
-  s_left_upper_ro: 282
-  s_m: 9
+  s_left_spinner: 1
+  s_left_upper_ro: 302
+  s_m: 1
   s_mead: 267
-  s_n: 282
-  s_opto_4: 9
-  s_opto_5: 9
-  s_opto_6: 9
+  s_n: 302
+  s_opto_1: 4
+  s_opto_2: 20
+  s_opto_3: 4
+  s_opto_4: 4
+  s_opto_5: 4
+  s_opto_6: 4
   s_percy: 85
   s_plunger: 363
-  s_pop_1: 42
-  s_pop_2: 90
+  s_pop_1: 62
+  s_pop_2: 110
   s_pop_bumper_1: 357
   s_pop_bumper_2: 357
   s_pop_bumper_3: 357
   s_right_flipper: 1
   s_right_flipper_eos: 363
-  s_right_hs_spinner: 8
-  s_right_inlane: 8
+  s_right_hs_spinner: 1
+  s_right_inlane: 3
   s_right_inner_lane: 357
   s_right_outer_lane: 357
-  s_right_outlane: 8
+  s_right_outlane: 3
   s_right_sling: 363
-  s_right_spinner: 8
-  s_right_upper_ro: 42
-  s_s: 9
+  s_right_spinner: 2
+  s_right_upper_ro: 62
+  s_s: 3
   s_scanlan: 204
   s_sling_left: 1
-  s_sling_right: 8
+  s_sling_right: 1
   s_start: 6
-  s_start_button: 9
-  s_subway_opto: 16
+  s_start_button: 1
+  s_subway_opto: 1
+  s_trough_1: 1
+  s_trough_2: 1
+  s_trough_3: 1
+  s_trough_4: 1
+  s_trough_5: 1
+  s_trough_6: 1
   s_trough_ball_1: 363
   s_trough_ball_2: 363
   s_trough_ball_3: 363
@@ -61,21 +71,22 @@ missing_switches:
   s_trough_ball_5: 363
   s_trough_ball_6: 95
   s_trough_ball_jam: 363
+  s_vuk_opto: 1
 player:
   score:
-    average: 176
+    average: 2278
     top:
+    - 498800
+    - 84900
     - 55000
+    - 19200
+    - 17500
+    - 16400
+    - 15800
+    - 12000
+    - 8400
     - 0
-    - 0
-    - 0
-    - 0
-    - 0
-    - 0
-    - 0
-    - 0
-    - 0
-    total: 311
+    total: 319
 shots:
   mead_shot: 223
   percy_shot: 56
@@ -84,7 +95,7 @@ shots:
   video_shot_2: 20
 switches:
   s_a: 0
-  s_aa: 91
+  s_aa: 96
   s_auto_launcher: 0
   s_ball_drain: 0
   s_bdt: 4
@@ -95,29 +106,29 @@ switches:
   s_eos_right: 1235
   s_fldt: 3
   s_frdt: 2
-  s_i: 480
-  s_l: 151
+  s_i: 485
+  s_l: 155
   s_launch: 0
-  s_launch_button: 1125
-  s_left_flipper: 5926
+  s_launch_button: 1154
+  s_left_flipper: 5993
   s_left_flipper_eos: 0
-  s_left_hs_spinner: 2837
-  s_left_inlane: 676
+  s_left_hs_spinner: 2911
+  s_left_inlane: 684
   s_left_inner_lane: 0
   s_left_outer_lane: 0
-  s_left_outlane: 222
+  s_left_outlane: 224
   s_left_sling: 7
-  s_left_spinner: 4645
+  s_left_spinner: 4847
   s_left_upper_ro: 0
-  s_m: 283
+  s_m: 293
   s_mead: 0
   s_n: 0
-  s_opto_1: 12
+  s_opto_1: 13
   s_opto_2: 13
-  s_opto_3: 99
-  s_opto_4: 11
-  s_opto_5: 6
-  s_opto_6: 8
+  s_opto_3: 621
+  s_opto_4: 12
+  s_opto_5: 7
+  s_opto_6: 9
   s_percy: 0
   s_plunger: 9
   s_pop_1: 239
@@ -125,31 +136,31 @@ switches:
   s_pop_bumper_1: 0
   s_pop_bumper_2: 0
   s_pop_bumper_3: 0
-  s_right_flipper: 7815
+  s_right_flipper: 7923
   s_right_flipper_eos: 0
-  s_right_hs_spinner: 3031
-  s_right_inlane: 727
+  s_right_hs_spinner: 3085
+  s_right_inlane: 741
   s_right_inner_lane: 0
   s_right_outer_lane: 0
-  s_right_outlane: 370
+  s_right_outlane: 375
   s_right_sling: 3
-  s_right_spinner: 1317
+  s_right_spinner: 1348
   s_right_upper_ro: 6
-  s_s: 81
+  s_s: 84
   s_scanlan: 0
-  s_shooter_lane: 1198
-  s_sling_left: 571
-  s_sling_right: 1219
+  s_shooter_lane: 1229
+  s_sling_left: 588
+  s_sling_right: 1228
   s_start: 38
-  s_start_button: 35
-  s_subway_opto: 167
+  s_start_button: 36
+  s_subway_opto: 169
   s_switch_2: 0
-  s_trough_1: 986
-  s_trough_2: 987
-  s_trough_3: 985
-  s_trough_4: 980
-  s_trough_5: 978
-  s_trough_6: 990
+  s_trough_1: 1014
+  s_trough_2: 1015
+  s_trough_3: 1013
+  s_trough_4: 1008
+  s_trough_5: 1006
+  s_trough_6: 1020
   s_trough_ball_1: 4
   s_trough_ball_2: 4
   s_trough_ball_3: 1
@@ -158,5 +169,5 @@ switches:
   s_trough_ball_6: 1
   s_trough_ball_jam: 3
   s_trough_eject_coil: 0
-  s_trough_jam: 1035
-  s_vuk_opto: 1184
+  s_trough_jam: 1066
+  s_vuk_opto: 1206

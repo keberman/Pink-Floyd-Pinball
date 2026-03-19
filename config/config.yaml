@@ -358,13 +358,21 @@ modes:
   - attract
   - base
 
-coil_player:
-  s_launch_button_active:
-    c_vuk: pulse
+#coil_player:
+#  s_launch_button_active:
+#    c_vuk: pulse
 
 event_player:
   init_phase_3: start_mode_attract
   init_done: machine_reset_phase_3
+
+sound_player:
+  game_started:
+    base_radio:
+      bus: music
+#  game_ended:
+#    base_radio:
+#      action: stop
 
 virtual_platform_start_active_switches:
   - s_trough_1

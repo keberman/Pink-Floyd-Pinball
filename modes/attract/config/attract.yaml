@@ -14,5 +14,5 @@ slide_player:
 
 sound_player:
   mode_attract_started:
-    welcome_to_the_machine:
+    attract_radio:
       bus: music
