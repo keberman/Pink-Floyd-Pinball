@@ -1,8 +1,25 @@
-[gd_scene load_steps=4 format=3 uid="uid://c2tf6o3rd55rh"]
+[gd_scene load_steps=6 format=3 uid="uid://c2tf6o3rd55rh"]
 
 [ext_resource type="Script" path="res://addons/mpf-gmc/classes/mpf_slide.gd" id="1_td7l7"]
 [ext_resource type="Texture2D" uid="uid://bohuckbdssxhn" path="res://images/91pWMaxGL7L._SL1500_.jpg" id="2_5w8y4"]
+[ext_resource type="FontFile" uid="uid://byav563fvutp3" path="res://fonts/led-dot-matrix.ttf" id="3_70nj5"]
 [ext_resource type="Script" path="res://addons/mpf-gmc/classes/mpf_variable.gd" id="3_pvtj8"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ikc66"]
+content_margin_left = 12.0
+content_margin_top = 8.0
+content_margin_right = 12.0
+content_margin_bottom = 8.0
+bg_color = Color(0, 0, 0, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.666667, 0.666667, 0.666667, 1)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
 
 [node name="Base" type="Control"]
 layout_mode = 3
@@ -20,16 +37,18 @@ texture = ExtResource("2_5w8y4")
 
 [node name="player_score" type="Label" parent="."]
 layout_mode = 0
-offset_left = 1609.79
-offset_top = 1162.03
-offset_right = 2133.79
-offset_bottom = 1394.03
-theme_override_colors/font_color = Color(1, 1, 1, 1)
+offset_left = 1787.0
+offset_top = 1192.0
+offset_right = 2290.0
+offset_bottom = 1408.0
+theme_override_colors/font_color = Color(0.960784, 0.960784, 0.960784, 1)
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
 theme_override_constants/shadow_offset_y = 7
 theme_override_constants/outline_size = 12
-theme_override_font_sizes/font_size = 150
+theme_override_fonts/font = ExtResource("3_70nj5")
+theme_override_font_sizes/font_size = 80
+theme_override_styles/normal = SubResource("StyleBoxFlat_ikc66")
 text = "100000"
 horizontal_alignment = 1
 vertical_alignment = 1
@@ -37,3 +56,48 @@ script = ExtResource("3_pvtj8")
 variable_name = "score"
 comma_separate = true
 min_digits = 2
+
+[node name="player_ball" type="Label" parent="."]
+layout_mode = 0
+offset_left = 209.0
+offset_top = 1268.0
+offset_right = 550.0
+offset_bottom = 1379.0
+theme_override_colors/font_color = Color(0.960784, 0.960784, 0.960784, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/shadow_offset_y = 7
+theme_override_constants/outline_size = 12
+theme_override_fonts/font = ExtResource("3_70nj5")
+theme_override_font_sizes/font_size = 50
+theme_override_styles/normal = SubResource("StyleBoxFlat_ikc66")
+text = "BALL 1"
+horizontal_alignment = 1
+vertical_alignment = 1
+script = ExtResource("3_pvtj8")
+variable_name = "ball"
+min_digits = 1
+template_string = "ball %s"
+
+[node name="player_number" type="Label" parent="."]
+layout_mode = 0
+offset_left = 1795.0
+offset_top = 164.0
+offset_right = 2275.0
+offset_bottom = 270.0
+theme_override_colors/font_color = Color(0.960784, 0.960784, 0.960784, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/shadow_offset_y = 7
+theme_override_constants/outline_size = 12
+theme_override_fonts/font = ExtResource("3_70nj5")
+theme_override_font_sizes/font_size = 50
+theme_override_styles/normal = SubResource("StyleBoxFlat_ikc66")
+text = "Player 1"
+horizontal_alignment = 1
+vertical_alignment = 1
+script = ExtResource("3_pvtj8")
+variable_name = "number"
+min_digits = 1
+template_string = "Player %s"
+min_players = 1

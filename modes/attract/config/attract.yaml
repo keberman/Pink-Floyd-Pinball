@@ -4,9 +4,12 @@
 
 mode_settings:
   selectable_items:
-    - title
-    - credits
-  next_item_events: s_right_flipper_active
+    - pink_floyd
+    - laser
+    - drugs
+    - high_score
+
+  next_item_events: s_right_flipper_active, timer_attract_carousel_timer_complete
   previous_item_events: s_left_flipper_active
 
 slide_player:
@@ -16,3 +19,15 @@ sound_player:
   mode_attract_started:
     attract_radio:
       bus: music
+
+timers:
+  attract_carousel_timer:
+    end_value: 1
+    tick_interval: 5s
+    start_running: true
+    restart_on_complete: true
+    control_events:
+      - event: flipper_cradle
+        action: stop
+      - event: flipper_cradle_release
+        action: restart

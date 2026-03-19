@@ -1,9 +1,11 @@
-[gd_scene load_steps=5 format=3 uid="uid://b5puffrfnfa0l"]
+[gd_scene load_steps=7 format=3 uid="uid://b5puffrfnfa0l"]
 
 [ext_resource type="Script" path="res://addons/mpf-gmc/classes/mpf_slide.gd" id="1_qdgl7"]
 [ext_resource type="Texture2D" uid="uid://bx5i5nabjoe31" path="res://images/pink-floyd-pictures-for-desktop-wallpaper-preview.jpg" id="3_d351m"]
 [ext_resource type="Script" path="res://addons/mpf-gmc/classes/mpf_carousel.gd" id="3_fyi8r"]
+[ext_resource type="FontFile" uid="uid://byav563fvutp3" path="res://fonts/led-dot-matrix.ttf" id="4_d5b64"]
 [ext_resource type="Script" path="res://addons/mpf-gmc/classes/mpf_variable.gd" id="4_y6s71"]
+[ext_resource type="VideoStream" path="res://videos/attract_mode_vid.ogv" id="5_utmg3"]
 
 [node name="Attract" type="Control"]
 custom_minimum_size = Vector2(2560, 1600)
@@ -15,33 +17,124 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_qdgl7")
 
-[node name="Sprite2D" type="Sprite2D" parent="."]
+[node name="MPFCarousel" type="Control" parent="."]
+anchors_preset = 0
+offset_right = 2561.0
+offset_bottom = 1600.0
+script = ExtResource("3_fyi8r")
+carousel_name = "attract"
+
+[node name="pink_floyd" type="Sprite2D" parent="MPFCarousel"]
 position = Vector2(1277.5, 800.25)
 scale = Vector2(3.50412, 3.45464)
 texture = ExtResource("3_d351m")
 
-[node name="MPFCarousel" type="Control" parent="."]
-anchors_preset = 0
-offset_right = 40.0
-offset_bottom = 40.0
-script = ExtResource("3_fyi8r")
-carousel_name = "attract"
+[node name="drugs" type="ColorRect" parent="MPFCarousel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = -1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 1)
 
-[node name="title" type="Label" parent="MPFCarousel"]
+[node name="Label" type="Label" parent="MPFCarousel/drugs"]
 layout_mode = 0
-offset_left = 121.0
-offset_top = 276.0
-offset_right = 613.0
-offset_bottom = 386.0
+offset_right = 2560.0
+offset_bottom = 1601.0
+theme_override_colors/font_color = Color(1, 0.690196, 0, 1)
+theme_override_fonts/font = ExtResource("4_d5b64")
+theme_override_font_sizes/font_size = 180
+text = "SAY NO
+
+TO DRUGS"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Label2" type="Label" parent="MPFCarousel/drugs"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = 718.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_fonts/font = ExtResource("4_d5b64")
+theme_override_font_sizes/font_size = 80
+text = "Except Syd.  Ride that bike."
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="high_score" type="ColorRect" parent="MPFCarousel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = -1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 1)
+
+[node name="Label" type="Label" parent="MPFCarousel/high_score"]
+layout_mode = 0
+offset_top = 379.0
+offset_right = 2560.0
+offset_bottom = 678.0
+theme_override_colors/font_color = Color(0.960784, 0.960784, 0.960784, 1)
+theme_override_fonts/font = ExtResource("4_d5b64")
+theme_override_font_sizes/font_size = 180
+text = "HIGH SCORES"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Label2" type="Label" parent="MPFCarousel/high_score"]
+layout_mode = 0
+offset_left = 683.0
+offset_top = 583.0
+offset_right = 2560.0
+offset_bottom = 1598.0
+theme_override_colors/font_color = Color(1, 0.690196, 0, 1)
+theme_override_fonts/font = ExtResource("4_d5b64")
+theme_override_font_sizes/font_size = 120
+text = "1. KJE: 12,000,000
+2. SYD: On LSD
+3. SRE: 500,000
+4. EJO: 100
+5. GPT: -250"
+vertical_alignment = 1
+
+[node name="laser" type="VideoStreamPlayer" parent="MPFCarousel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+stream = ExtResource("5_utmg3")
+autoplay = true
+expand = true
+loop = true
+
+[node name="title" type="Label" parent="."]
+layout_mode = 0
+offset_left = 212.0
+offset_top = 273.0
+offset_right = 763.0
+offset_bottom = 383.0
+theme_override_colors/font_color = Color(1, 0.690196, 0, 1)
+theme_override_fonts/font = ExtResource("4_d5b64")
 theme_override_font_sizes/font_size = 80
 text = "PRESS START"
 
-[node name="credits" type="Label" parent="MPFCarousel"]
+[node name="credits" type="Label" parent="."]
 layout_mode = 0
 offset_left = 1794.0
 offset_top = 280.0
 offset_right = 2351.0
 offset_bottom = 404.0
+theme_override_colors/font_color = Color(1, 0.690196, 0, 1)
+theme_override_fonts/font = ExtResource("4_d5b64")
 theme_override_font_sizes/font_size = 80
 text = "SAMPLE TEXT"
 script = ExtResource("4_y6s71")
