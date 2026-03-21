@@ -5,5 +5,32 @@
 
 mode:
   start_events: start_bike
-  stop_events: stop_bike
+  stop_events: 
+    - stop_bike
+    - stop_bike_timer_bike_timer_complete
   priority: 200
+
+slide_player:
+  mode_bike_started: bike
+
+sound_player:
+  mode_bike_started:
+    bike_1:
+      bus: music
+
+event_player:
+  s_left_spinner_active: bike_left_orbit_hit
+  bike_left_orbit_hit: stop_bike
+
+variable_player:
+  bike_left_orbit_hit:
+    score: 1_000_000
+
+timers:
+  bike_timer:
+    start_value: 60
+    end_value: 0
+    direction: down
+    tick_interval:  1s
+    start_running: true
+

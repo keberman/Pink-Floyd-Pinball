@@ -357,6 +357,7 @@ autofire_coils:
 modes:
   - attract
   - base
+  - bike
 
 #coil_player:
 #  s_launch_button_active:

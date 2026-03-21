@@ -1,18 +1,18 @@
 [gd_resource type="AudioStreamPlaylist" load_steps=7 format=3 uid="uid://cl6j3t4k1c3jm"]
 
-[ext_resource type="AudioStream" uid="uid://cwuksaxcvdl71" path="res://modes/base/sounds/music/young_lust.mp3" id="1_ofhmv"]
-[ext_resource type="AudioStream" uid="uid://cthmd81wehs3j" path="res://modes/base/sounds/music/have_a_cigar.mp3" id="2_17i31"]
-[ext_resource type="AudioStream" uid="uid://di1e7ah2d2c6i" path="res://modes/base/sounds/music/one_of_these_days.mp3" id="3_ogto5"]
-[ext_resource type="AudioStream" uid="uid://c6y1b3jmhy1kd" path="res://modes/base/sounds/music/sheep.mp3" id="4_xj8fa"]
-[ext_resource type="AudioStream" uid="uid://egbkn77x2qnm" path="res://modes/base/sounds/music/comfortably_numb.mp3" id="5_ikies"]
-[ext_resource type="AudioStream" uid="uid://b0688n8lb2w5w" path="res://modes/base/sounds/music/run_like_hell.mp3" id="6_6ex2h"]
+[ext_resource type="AudioStream" uid="uid://catwl0f5x3ees" path="res://modes/base/sounds/music/young_lust_trimmed.wav" id="1_4ke31"]
+[ext_resource type="AudioStream" uid="uid://dmfilqbdunop0" path="res://modes/base/sounds/music/have_a_cigar_trimmed.wav" id="2_qecge"]
+[ext_resource type="AudioStream" uid="uid://bof33joru2m0m" path="res://modes/base/sounds/music/one_of_these_days_trimmed.wav" id="3_03b0b"]
+[ext_resource type="AudioStream" uid="uid://bvu8lboha06rs" path="res://modes/base/sounds/music/sheep_trimmed.wav" id="4_1o0b4"]
+[ext_resource type="AudioStream" uid="uid://jix7exjy1hel" path="res://modes/base/sounds/music/comfortably_numb_trimmed.wav" id="5_bhwqv"]
+[ext_resource type="AudioStream" uid="uid://cqo7gllsxehwj" path="res://modes/base/sounds/music/run_like_hell_trimmed.wav" id="6_gyjd8"]
 
 [resource]
 shuffle = true
 stream_count = 6
-stream_0 = ExtResource("1_ofhmv")
-stream_1 = ExtResource("2_17i31")
-stream_2 = ExtResource("3_ogto5")
-stream_3 = ExtResource("4_xj8fa")
-stream_4 = ExtResource("5_ikies")
-stream_5 = ExtResource("6_6ex2h")
+stream_0 = ExtResource("1_4ke31")
+stream_1 = ExtResource("2_qecge")
+stream_2 = ExtResource("3_03b0b")
+stream_3 = ExtResource("4_1o0b4")
+stream_4 = ExtResource("5_bhwqv")
+stream_5 = ExtResource("6_gyjd8")

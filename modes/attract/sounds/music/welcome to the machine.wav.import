@@ -1,0 +1,24 @@
+[remap]
+
+importer="wav"
+type="AudioStreamWAV"
+uid="uid://eimis7wqjy3b"
+path="res://.godot/imported/welcome to the machine.wav-00437a05d7356e11c1ceca3a33411a72.sample"
+
+[deps]
+
+source_file="res://modes/attract/sounds/music/welcome to the machine.wav"
+dest_files=["res://.godot/imported/welcome to the machine.wav-00437a05d7356e11c1ceca3a33411a72.sample"]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop_mode=0
+edit/loop_begin=0
+edit/loop_end=-1
+compress/mode=0

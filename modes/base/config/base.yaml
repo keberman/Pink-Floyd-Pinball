@@ -85,3 +85,22 @@ variable_player:
   #vuk
   s_vuk_opto_active:
     score: 5000
+
+shots:
+  bike_left_inlane:
+    switch: s_left_inlane
+  bike_right_inlane:
+    switch: s_right_inlane
+  bike_left_orbit:
+    switch: s_left_spinner
+
+shot_groups:
+  bike_qualify:
+    shots:
+      - bike_left_inlane
+      - bike_right_inlane
+    reset_events:
+      - mode_bike_started
+
+event_player:
+  bike_qualify_complete: start_bike
