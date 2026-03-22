@@ -1,0 +1,8 @@
+[gd_resource type="AudioStreamPlaylist" load_steps=2 format=3 uid="uid://dl6it4dvj7yx6"]
+
+[ext_resource type="AudioStream" uid="uid://dlygdf6m6ueip" path="res://modes/bike/sounds/music/bike_1.wav" id="1_ao7vk"]
+
+[resource]
+loop = false
+stream_count = 1
+stream_0 = ExtResource("1_ao7vk")

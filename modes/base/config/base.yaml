@@ -8,7 +8,10 @@ slide_player:
   mode_base_started: base
 
 #sound_player:
-#  ball_started{current_player .ball==1}:
+# mode_base_started:
+#   base_radio:
+#     bus: music
+#  resume_base_radio:
 #    base_radio:
 #      bus: music
 
@@ -104,3 +107,4 @@ shot_groups:
 
 event_player:
   bike_qualify_complete: start_bike
+  mode_bike_stopped: resume_base_radio

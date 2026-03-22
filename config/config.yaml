@@ -358,6 +358,7 @@ modes:
   - attract
   - base
   - bike
+  - high_score
 
 #coil_player:
 #  s_launch_button_active:
@@ -369,6 +370,9 @@ event_player:
 
 sound_player:
   game_started:
+    base_radio:
+      bus: music
+  resume_base_radio:
     base_radio:
       bus: music
 #  game_ended:
