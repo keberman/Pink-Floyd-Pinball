@@ -160,19 +160,19 @@ switches:
   s_frdt:
     number: aux-1
     debounce: normal
-  s_opto_1:
+  s_wall_top_right:
     number: aux-2
     type: nc
     debounce: normal
-  s_opto_2:
+  s_wall_top_center:
     number: aux-3
     type: nc
     debounce: normal
-  s_opto_3:
+  s_wall_top_left:
     number: aux-4
     type: nc
     debounce: normal
-  s_bdt:
+  s_hammers_entrance:
     number: aux-5
     debounce: normal
   s_left_spinner:
@@ -181,15 +181,15 @@ switches:
   s_right_spinner:
     number: aux-7
     debounce: quick
-  s_opto_4:
+  s_wall_bottom_right:
     number: aux-8
     type: nc
     debounce: normal
-  s_opto_5:
+  s_wall_bottom_center:
     number: aux-9
     type: nc
     debounce: normal
-  s_opto_6:
+  s_wall_bottom_left:
     number: aux-10
     type: nc
     debounce: normal
@@ -246,7 +246,7 @@ coils:
     number: aux-2
     default_pulse_ms: 50
     max_pulse_ms: 100
-  c_bdt:
+  c_hammer_entrance:
     number: aux-3
     default_pulse_ms: 50
     max_pulse_ms: 100
@@ -282,7 +282,7 @@ coils:
     number: aux-12
     default_pulse_ms: 30
     max_pulse_ms: 0.6
-  c_bdt_knockdown:
+  c_hammer_entrance_knockdown:
     number: aux-13
     default_pulse_ms: 30
     max_pulse_ms: 0.6
@@ -359,6 +359,10 @@ modes:
   - base
   - bike
   - high_score
+#  - lower_test
+  - drop_reset
+  - game_logic
+  - mode_start
 
 #coil_player:
 #  s_launch_button_active:

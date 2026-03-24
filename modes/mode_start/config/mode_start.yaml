@@ -1,0 +1,122 @@
+#config_version=6
+
+##############################################################################
+# MODE_START
+# Shared VUK qualification window for all main modes
+# Activated when any mode qualification is complete
+# 60 second window to hit VUK → mode launches
+# Timeout → pending mode progress resets to 0, other modes untouched
+##############################################################################
+
+mode:
+  priority: 175
+  game_mode: true
+  start_events: wall_qualify_complete, dsotm_qualify_complete, animals_qualify_complete, wywh_qualify_complete, divisionbell_qualify_complete
+  stop_events: mode_start_success, timer_vuk_window_timer_complete, ball_ended
+  events_when_started: mode_start_activated
+  events_when_stopped: mode_start_stopped
+
+##############################################################################
+# 60 SECOND VUK WINDOW TIMER
+##############################################################################
+
+timers:
+  vuk_window_timer:
+    start_value: 60
+    end_value: 0
+    direction: down
+    control_events:
+      - event: mode_start_activated
+        action: start
+      - event: mode_start_stopped
+        action: stop
+      - event: mode_start_stopped
+        action: reset
+
+##############################################################################
+# VARIABLE PLAYER
+##############################################################################
+
+variable_player:
+  wall_qualify_complete:
+    pending_mode: "wall"
+
+  dsotm_qualify_complete:
+    pending_mode: "dsotm"
+
+  animals_qualify_complete:
+    pending_mode: "animals"
+
+  wywh_qualify_complete:
+    pending_mode: "wywh"
+
+  divisionbell_qualify_complete:
+    pending_mode: "divisionbell"
+
+  mode_start_stopped:
+    pending_mode: "none"
+
+  reset_wall_progress:
+    wall_progress: 0
+
+  reset_dsotm_progress:
+    dsotm_progress: 0
+
+  reset_animals_progress:
+    animals_progress: 0
+
+  reset_wywh_progress:
+    wywh_progress: 0
+
+  reset_divisionbell_progress:
+    divisionbell_progress: 0
+
+##############################################################################
+# COIL PLAYER
+##############################################################################
+
+coil_player:
+  s_vuk_opto_active:
+    c_vuk:
+      action: pulse
+      pulse_ms: 35
+
+##############################################################################
+# EVENT PLAYER
+##############################################################################
+
+event_player:
+  "s_vuk_opto_active{current_player.pending_mode == 'wall'}":
+    - mode_start_success
+    - start_the_wall
+
+  "s_vuk_opto_active{current_player.pending_mode == 'dsotm'}":
+    - mode_start_success
+    - start_dsotm
+
+  "s_vuk_opto_active{current_player.pending_mode == 'animals'}":
+    - mode_start_success
+    - start_animals
+
+  "s_vuk_opto_active{current_player.pending_mode == 'wywh'}":
+    - mode_start_success
+    - start_wywh
+
+  "s_vuk_opto_active{current_player.pending_mode == 'divisionbell'}":
+    - mode_start_success
+    - start_divisionbell
+
+  "timer_vuk_window_timer_complete{current_player.pending_mode == 'wall'}":
+    - reset_wall_progress
+
+  "timer_vuk_window_timer_complete{current_player.pending_mode == 'dsotm'}":
+    - reset_dsotm_progress
+
+  "timer_vuk_window_timer_complete{current_player.pending_mode == 'animals'}":
+    - reset_animals_progress
+
+  "timer_vuk_window_timer_complete{current_player.pending_mode == 'wywh'}":
+    - reset_wywh_progress
+
+  "timer_vuk_window_timer_complete{current_player.pending_mode == 'divisionbell'}":
+    - reset_divisionbell_progress

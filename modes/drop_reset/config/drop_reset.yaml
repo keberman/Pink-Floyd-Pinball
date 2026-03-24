@@ -1,0 +1,164 @@
+#config_version=6
+
+mode:
+  start_events: ball_started
+  stop_events: ball_ending
+  priority: 300
+
+# -------------------
+# PLAYER VARIABLES
+# -------------------
+
+variable_player:
+  mode_drop_reset_started:
+    drop_reset_qualified:
+      action: set
+      int: 0
+    wall_top_right_down:
+      action: set
+      int: 0
+    wall_top_center_down:
+      action: set
+      int: 0
+    wall_top_left_down:
+      action: set
+      int: 0
+    wall_bottom_right_down:
+      action: set
+      int: 0
+    wall_bottom_center_down:
+      action: set
+      int: 0
+    wall_bottom_left_down:
+      action: set
+      int: 0
+
+  s_wall_top_right_active:
+    wall_top_right_down:
+      action: set
+      int: 1
+
+  s_wall_top_center_active:
+    wall_top_center_down:
+      action: set
+      int: 1
+
+  s_wall_top_left_active:
+    wall_top_left_down:
+      action: set
+      int: 1
+
+  s_wall_bottom_right_active:
+    wall_bottom_right_down:
+      action: set
+      int: 1
+
+  s_wall_bottom_center_active:
+    wall_bottom_center_down:
+      action: set
+      int: 1
+
+  s_wall_bottom_left_active:
+    wall_bottom_left_down:
+      action: set
+      int: 1
+
+  drop_reset_complete:
+    drop_reset_qualified:
+      action: set
+      int: 1
+
+  drop_reset_clear:
+    drop_reset_qualified:
+      action: set
+      int: 0
+    wall_top_right_down:
+      action: set
+      int: 0
+    wall_top_center_down:
+      action: set
+      int: 0
+    wall_top_left_down:
+      action: set
+      int: 0
+    wall_bottom_right_down:
+      action: set
+      int: 0
+    wall_bottom_center_down:
+      action: set
+      int: 0
+    wall_bottom_left_down:
+      action: set
+      int: 0
+
+# -------------------
+# EVENTS
+# -------------------
+
+event_player:
+  mode_drop_reset_started:
+    - fire_upper_reset
+    - fire_lower_reset|200ms
+    - fire_hammer_reset|400ms
+    - drop_reset_clear|600ms
+
+  s_wall_top_right_active:
+    - check_drop_reset_complete|50ms
+
+  s_wall_top_center_active:
+    - check_drop_reset_complete|50ms
+
+  s_wall_top_left_active:
+    - check_drop_reset_complete|50ms
+
+  s_wall_bottom_right_active:
+    - check_drop_reset_complete|50ms
+
+  s_wall_bottom_center_active:
+    - check_drop_reset_complete|50ms
+
+  s_wall_bottom_left_active:
+    - check_drop_reset_complete|50ms
+
+  "check_drop_reset_complete{current_player.wall_top_right_down == 1 and current_player.wall_top_center_down == 1 and current_player.wall_top_left_down == 1 and current_player.wall_bottom_right_down == 1 and current_player.wall_bottom_center_down == 1 and current_player.wall_bottom_left_down == 1 and current_player.drop_reset_qualified == 0}":
+    - drop_reset_complete
+
+  drop_reset_complete:
+    - fire_hammer_knockdown
+
+  # Ball physically hit hammer entrance while unqualified - reset it back up
+  "s_hammers_entrance_active{current_player.drop_reset_qualified == 0}":
+    - fire_hammer_reset|100ms
+
+  # Rear entrance detected - hammer target is up, ball came from rear
+  # Just eject via VUK, don't touch wall targets
+  "s_subway_opto_active{current_player.drop_reset_qualified == 0}":
+    - post_vuk_eject
+
+  # Valid completion - hammer was properly knocked down
+  # Front or rear entrance both count as completion
+  "s_subway_opto_active{current_player.drop_reset_qualified == 1}":
+    - fire_upper_reset
+    - fire_lower_reset|200ms
+    - fire_hammer_reset|400ms
+    - drop_reset_clear|600ms
+
+# -------------------
+# COILS
+# -------------------
+
+coil_player:
+  fire_upper_reset:
+    c_3_bank_upper: pulse
+
+  fire_lower_reset:
+    c_3_bank_lower: pulse
+
+  fire_hammer_reset:
+    c_hammer_entrance: pulse
+
+  fire_hammer_knockdown:
+    c_hammer_entrance_knockdown: pulse
+
+  post_vuk_eject:
+    c_vuk: pulse

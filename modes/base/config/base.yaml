@@ -60,17 +60,17 @@ variable_player:
   s_db_3_active:
     score: 500
   #drops
-  s_opto_1_active:
+  s_wall_top_right_active:
     score: 1000
-  s_opto_2_active:
+  s_wall_top_center_active:
     score: 1000
-  s_opto_3_active:
+  s_wall_top_left_active:
     score: 1000
-  s_opto_4_active:
+  s_wall_bottom_right_active:
     score: 1000
-  s_opto_5_active:
+  s_wall_bottom_center_active:
     score: 1000
-  s_opto_6_active:
+  s_wall_bottom_left_active:
     score: 1000
   #bumpers
   s_pop_1_active:
@@ -106,5 +106,5 @@ shot_groups:
       - mode_bike_started
 
 event_player:
-  bike_qualify_complete: start_bike
+  "bike_qualify_complete{current_player.active_main_mode == 'none'}": start_bike
   mode_bike_stopped: resume_base_radio

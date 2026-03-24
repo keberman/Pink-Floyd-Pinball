@@ -1,0 +1,46 @@
+#config_version=6
+#drop_reset mode config file
+
+mode:
+  start_events: ball_starting
+  stop_events: ball_stopped
+  priority: 100
+
+shots:
+  - wall_1
+  - wall_2
+  - wall_3
+  - wall_4
+  - wall_5
+  - wall_6
+  - hammer_entrance
+
+drop_targets:
+  wall_1:
+    switch: s_wall_top_right
+    reset_coil: c_3_bank_upper
+    reset_events: ball_starting, machine_reset_phase_3, wall_complete
+  wall_2:
+    switch: s_wall_top_center
+    reset_coil: c_3_bank_upper
+    reset_events: ball_starting, machine_reset_phase_3, wall_complete
+  wall_3:
+    switch: s_wall_top_left
+    reset_coil: c_3_bank_upper
+    reset_events: ball_starting, machine_reset_phase_3, wall_complete
+  wall_4:
+    switch: s_wall_bottom_right
+    reset_coil: c_3_bank_lower
+    reset_events: ball_starting, machine_reset_phase_3, wall_complete
+  wall_5:
+    switch: s_wall_bottom_center
+    reset_coil: c_3_bank_lower
+    reset_events: ball_starting, machine_reset_phase_3, wall_complete
+  wall_6:
+    switch: s_wall_bottom_left
+    reset_coil: c_3_bank_lower
+    reset_events: ball_starting, machine_reset_phase_3, wall_complete
+  hammer_entrance:
+    switch: s_hammer_entrance
+    reset_coil: c_hammer_entrance
+    reset_events: ball_starting, machine_reset_phase_3, wall_complete

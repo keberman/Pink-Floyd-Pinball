@@ -1,0 +1,218 @@
+#config_version=6
+
+mode:
+  start_events: ball_started
+  stop_events: ball_ending
+  priority: 150
+
+# -------------------
+# PLAYER VARIABLES
+# -------------------
+
+variable_player:
+  mode_game_logic_started:
+    active_main_mode:
+      action: set
+      string: "none"
+    wall_progress:
+      action: set
+      int: 0
+    dsotm_progress:
+      action: set
+      int: 0
+    animals_progress:
+      action: set
+      int: 0
+    wywh_progress:
+      action: set
+      int: 0
+    divisionbell_progress:
+      action: set
+      int: 0
+    bike_progress:
+      action: set
+      int: 0
+    wall_complete_count:
+      action: set
+      int: 0
+    dsotm_complete_count:
+      action: set
+      int: 0
+    animals_complete_count:
+      action: set
+      int: 0
+    wywh_complete_count:
+      action: set
+      int: 0
+    divisionbell_complete_count:
+      action: set
+      int: 0
+    eclipse_complete_count:
+      action: set
+      int: 0
+    pending_mode:
+      action: set
+      string: "none"
+
+  set_active_mode_wall:
+    active_main_mode:
+      action: set
+      string: "wall"
+
+  set_active_mode_dsotm:
+    active_main_mode:
+      action: set
+      string: "dsotm"
+
+  set_active_mode_animals:
+    active_main_mode:
+      action: set
+      string: "animals"
+
+  set_active_mode_wywh:
+    active_main_mode:
+      action: set
+      string: "wywh"
+
+  set_active_mode_divisionbell:
+    active_main_mode:
+      action: set
+      string: "divisionbell"
+
+  set_active_mode_bike:
+    active_main_mode:
+      action: set
+      string: "bike"
+
+  set_active_mode_high_hopes:
+    active_main_mode:
+      action: set
+      string: "high_hopes"
+
+  set_active_mode_eclipse:
+    active_main_mode:
+      action: set
+      string: "eclipse"
+
+  clear_active_mode:
+    active_main_mode:
+      action: set
+      string: "none"
+
+  wall_mode_completed:
+    wall_complete_count:
+      action: add
+      int: 1
+
+  dsotm_mode_completed:
+    dsotm_complete_count:
+      action: add
+      int: 1
+
+  animals_mode_completed:
+    animals_complete_count:
+      action: add
+      int: 1
+
+  wywh_mode_completed:
+    wywh_complete_count:
+      action: add
+      int: 1
+
+  divisionbell_mode_completed:
+    divisionbell_complete_count:
+      action: add
+      int: 1
+
+  eclipse_mode_completed:
+    eclipse_complete_count:
+      action: add
+      int: 1
+
+# -------------------
+# EVENTS
+# -------------------
+
+event_player:
+  mode_the_wall_started:
+    - set_active_mode_wall
+
+  mode_dsotm_started:
+    - set_active_mode_dsotm
+
+  mode_animals_started:
+    - set_active_mode_animals
+
+  mode_wywh_started:
+    - set_active_mode_wywh
+
+  mode_divisionbell_started:
+    - set_active_mode_divisionbell
+
+  mode_bike_started:
+    - set_active_mode_bike
+
+  mode_high_hopes_started:
+    - set_active_mode_high_hopes
+
+  mode_eclipse_started:
+    - set_active_mode_eclipse
+
+  mode_the_wall_stopped:
+    - clear_active_mode
+
+  mode_dsotm_stopped:
+    - clear_active_mode
+
+  mode_animals_stopped:
+    - clear_active_mode
+
+  mode_wywh_stopped:
+    - clear_active_mode
+
+  mode_divisionbell_stopped:
+    - clear_active_mode
+
+  mode_bike_stopped:
+    - clear_active_mode
+
+  mode_high_hopes_stopped:
+    - clear_active_mode
+
+  mode_eclipse_stopped:
+    - clear_active_mode
+
+  # Track completions - these events will be fired by each mode when completed
+  wall_mode_completed:
+    - wall_mode_completed
+
+  dsotm_mode_completed:
+    - dsotm_mode_completed
+
+  animals_mode_completed:
+    - animals_mode_completed
+
+  wywh_mode_completed:
+    - wywh_mode_completed
+
+  divisionbell_mode_completed:
+    - divisionbell_mode_completed
+
+  eclipse_mode_completed:
+    - eclipse_mode_completed
+
+  # Check for Eclipse qualification after each main mode completes
+  "wall_mode_completed{current_player.wall_complete_count >= 1 and current_player.dsotm_complete_count >= 1 and current_player.animals_complete_count >= 1 and current_player.wywh_complete_count >= 1 and current_player.divisionbell_complete_count >= 1}":
+    - eclipse_qualified
+
+  "dsotm_mode_completed{current_player.wall_complete_count >= 1 and current_player.dsotm_complete_count >= 1 and current_player.animals_complete_count >= 1 and current_player.wywh_complete_count >= 1 and current_player.divisionbell_complete_count >= 1}":
+    - eclipse_qualified
+
+  "animals_mode_completed{current_player.wall_complete_count >= 1 and current_player.dsotm_complete_count >= 1 and current_player.animals_complete_count >= 1 and current_player.wywh_complete_count >= 1 and current_player.divisionbell_complete_count >= 1}":
+    - eclipse_qualified
+
+  "wywh_mode_completed{current_player.wall_complete_count >= 1 and current_player.dsotm_complete_count >= 1 and current_player.animals_complete_count >= 1 and current_player.wywh_complete_count >= 1 and current_player.divisionbell_complete_count >= 1}":
+    - eclipse_qualified
+
+  "divisionbell_mode_completed{current_player.wall_complete_count >= 1 and current_player.dsotm_complete_count >= 1 and current_player.animals_complete_count >= 1 and current_player.wywh_complete_count >= 1 and current_player.divisionbell_complete_count >= 1}":
+    - eclipse_qualified

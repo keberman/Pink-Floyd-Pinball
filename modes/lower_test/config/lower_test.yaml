@@ -1,0 +1,19 @@
+#config_version=6
+#lower drop test mode config file
+
+mode:
+  start_events: ball_started
+  stop_events: ball_ending
+  priority: 1000
+
+event_player:
+  mode_lower_test_started:
+    - fire_hammer
+
+  s_start_button_active:
+    - fire_hammer
+
+
+coil_player:
+  fire_hammer:
+    c_hammer_entrance: pulse
