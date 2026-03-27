@@ -106,5 +106,7 @@ shot_groups:
       - mode_bike_started
 
 event_player:
-  "bike_qualify_complete{current_player.active_main_mode == 'none'}": start_bike
+  "bike_qualify_complete{current_player.active_main_mode == 'inactive'}": start_bike
   mode_bike_stopped: resume_base_radio
+
+  wall_mode_completed: resume_base_radio

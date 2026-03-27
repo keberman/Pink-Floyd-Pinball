@@ -1,13 +1,13 @@
 #config_version=6
-
+ 
 hardware:
   platform: fast
   driverboards: fast
-
+ 
 machine:
   balls_installed: 1
   min_balls: 1
-
+ 
 fast:
   net:
     controller: neuron
@@ -23,14 +23,14 @@ fast:
       aux:
         model: FP-I/O-1616
         order: 3
-
+ 
 #logging:
 #  console:
 #    level: warning
 #  file:
 #    path: logs/mpf.log
 #    level: debug
-
+ 
 switches:
   s_start_button:
     number: cab-8
@@ -48,7 +48,7 @@ switches:
     number: cab-17
     debounce: normal
     tags: launch
-
+ 
 #  s_eos_left:
 #    number: pf-0
 #    debounce: quick
@@ -66,40 +66,47 @@ switches:
   s_left_outlane:
     number: pf-4
     debounce: normal
-    tags: outlane_left
+    tags: outlane_left, playfield_active
   s_left_inlane:
     number: pf-5
     debounce: normal
-    tags: inlane_left
+    tags: inlane_left, playfield_active
   s_right_inlane:
     number: pf-6
     debounce: normal
-    tags: inlane_right
+    tags: inlane_right, playfield_active   
   s_right_outlane:
     number: pf-7
     debounce: normal
-    tags: outlane_right
+    tags: outlane_right, playfield_active
   s_a:
     number: pf-8
     debounce: normal
+    tags: playfield_active
   s_n:
     number: pf-9
     debounce: normal
+    tags: playfield_active
   s_i:
     number: pf-10
     debounce: normal
+    tags: playfield_active
   s_m:
     number: pf-11
     debounce: normal
+    tags: playfield_active
   s_aa:
     number: pf-12
     debounce: normal
+    tags: playfield_active
   s_l:
     number: pf-13
     debounce: normal
+    tags: playfield_active
   s_s:
     number: pf-14
     debounce: normal
+    tags: playfield_active
   s_trough_1:
     number: pf-16
     type: nc
@@ -135,25 +142,32 @@ switches:
   s_left_upper_ro:
     number: pf-24
     debounce: normal
+    tags: playfield_active
   s_right_upper_ro:
     number: pf-25
     debounce: normal
+    tags: playfield_active
   s_left_hs_spinner:
     number: pf-26
     debounce: quick
+    tags: playfield_active
   s_right_hs_spinner:
     number: pf-27
     debounce: quick
+    tags: playfield_active
   s_db_1:
     number: pf-28
     debounce: normal
+    tags: playfield_active
   s_db_2:
     number: pf-29
     debounce: normal
+    tags: playfield_active
   s_db_3:
     number: pf-30
     debounce: normal
-
+    tags: playfield_active
+ 
   s_fldt:
     number: aux-0
     debounce: normal
@@ -178,9 +192,11 @@ switches:
   s_left_spinner:
     number: aux-6
     debounce: quick
+    tags: playfield_active
   s_right_spinner:
     number: aux-7
     debounce: quick
+    tags: playfield_active
   s_wall_bottom_right:
     number: aux-8
     type: nc
@@ -207,7 +223,7 @@ switches:
   s_pop_2:
     number: aux-14
     debounce: quick
-
+ 
 coils:
   c_flipper_left_main:
     number: pf-6
@@ -221,19 +237,19 @@ coils:
   c_flipper_right_hold:
     number: pf-5
     allow_enable: true
-
+ 
   c_sling_left:
     number: pf-2
   c_sling_right:
     number: pf-1
-
+ 
   c_trough_eject:
     number: pf-0
     default_pulse_ms: 20
   c_auto_plunger:
     number: pf-3
     default_pulse_ms: 30
-
+ 
   c_fldt_dog:
     number: aux-0
     default_pulse_ms: 50
@@ -286,7 +302,7 @@ coils:
     number: aux-13
     default_pulse_ms: 30
     max_pulse_ms: 0.6
-
+ 
 ball_devices:
   bd_trough:
     ball_switches: s_trough_1, s_trough_2, s_trough_3, s_trough_4, s_trough_5, s_trough_6
@@ -295,7 +311,7 @@ ball_devices:
     eject_targets: bd_shooter_lane
     tags: trough, home, drain
     eject_timeouts: 3s
-
+ 
   bd_shooter_lane:
     ball_switches: s_shooter_lane
     eject_coil: c_auto_plunger
@@ -303,18 +319,18 @@ ball_devices:
     eject_targets: playfield
     player_controlled_eject_event: s_launch_button_active
     tags: playfield_active_switch
-
+ 
   bd_vuk:
     ball_switches: s_vuk_opto
     eject_coil: c_vuk
     eject_targets: playfield
     tags: vuk
-
+ 
 playfields:
   playfield:
     tags: default
     default_source_device: bd_shooter_lane
-
+ 
 flippers:
   left_flipper:
     main_coil: c_flipper_left_main
@@ -323,7 +339,7 @@ flippers:
 #    eos_switch: s_eos_left
 #    enable_events: machine_reset_phase_3
 #    disable_events: service_mode_entered
-
+ 
   right_flipper:
     main_coil: c_flipper_right_main
     hold_coil: c_flipper_right_hold
@@ -331,7 +347,7 @@ flippers:
 #    eos_switch: s_eos_right
 #    enable_events: machine_reset_phase_3
 #    disable_events: service_mode_entered
-
+ 
 autofire_coils:
   sling_left:
     coil: c_sling_left
@@ -353,25 +369,38 @@ autofire_coils:
     coil: c_pop_2
     switch: s_pop_2
     enable_events: ball_started
-
+ 
 modes:
   - attract
   - base
   - bike
   - high_score
 #  - lower_test
-  - drop_reset
+#  - drop_reset
   - game_logic
   - mode_start
-
+  - the_wall
+ 
 #coil_player:
 #  s_launch_button_active:
 #    c_vuk: pulse
-
+ 
 event_player:
   init_phase_3: start_mode_attract
   init_done: machine_reset_phase_3
-
+  ball_started:
+    - reset_upper_bank
+    - reset_lower_bank|200ms
+    - reset_hammer_entrance|400ms
+ 
+coil_player:
+  reset_upper_bank:
+    c_3_bank_upper: pulse
+  reset_lower_bank:
+    c_3_bank_lower: pulse
+  reset_hammer_entrance:
+    c_hammer_entrance: pulse
+ 
 sound_player:
   game_started:
     base_radio:
@@ -382,8 +411,80 @@ sound_player:
 #  game_ended:
 #    base_radio:
 #      action: stop
-
+ 
 virtual_platform_start_active_switches:
   - s_trough_1
   - s_trough_2
   - s_trough_3
+ 
+# -------------------
+# PLAYER VARIABLES — Pre-declared with types
+# -------------------
+ 
+player_vars:
+  active_main_mode:
+    initial_value: inactive
+    value_type: str
+  pending_mode:
+    initial_value: inactive
+    value_type: str
+  wall_progress:
+    initial_value: 0
+    value_type: int
+  dsotm_progress:
+    initial_value: 0
+    value_type: int
+  animals_progress:
+    initial_value: 0
+    value_type: int
+  wywh_progress:
+    initial_value: 0
+    value_type: int
+  divisionbell_progress:
+    initial_value: 0
+    value_type: int
+  bike_progress:
+    initial_value: 0
+    value_type: int
+  wall_complete_count:
+    initial_value: 0
+    value_type: int
+  dsotm_complete_count:
+    initial_value: 0
+    value_type: int
+  animals_complete_count:
+    initial_value: 0
+    value_type: int
+  wywh_complete_count:
+    initial_value: 0
+    value_type: int
+  divisionbell_complete_count:
+    initial_value: 0
+    value_type: int
+  eclipse_complete_count:
+    initial_value: 0
+    value_type: int
+  wall_qualified:
+    initial_value: 0
+    value_type: int
+  wall_top_right_down:
+    initial_value: 0
+    value_type: int
+  wall_top_center_down:
+    initial_value: 0
+    value_type: int
+  wall_top_left_down:
+    initial_value: 0
+    value_type: int
+  wall_bottom_right_down:
+    initial_value: 0
+    value_type: int
+  wall_bottom_center_down:
+    initial_value: 0
+    value_type: int
+  wall_bottom_left_down:
+    initial_value: 0
+    value_type: int
+  wall_mode_active:
+    initial_value: 0
+    value_type: int

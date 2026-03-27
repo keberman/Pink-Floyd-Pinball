@@ -1,218 +1,202 @@
 #config_version=6
-
+ 
 mode:
   start_events: ball_started
   stop_events: ball_ending
   priority: 150
-
+ 
+ 
 # -------------------
-# PLAYER VARIABLES
+# VARIABLE PLAYER
 # -------------------
-
+# Handles active_main_mode tracking and completion counts.
+# clear_active_mode is triggered directly by *_mode_completed events (success path)
+# and by *_stopped events (timer expiry / failure path).
+ 
 variable_player:
-  mode_game_logic_started:
-    active_main_mode:
-      action: set
-      string: "none"
-    wall_progress:
-      action: set
-      int: 0
-    dsotm_progress:
-      action: set
-      int: 0
-    animals_progress:
-      action: set
-      int: 0
-    wywh_progress:
-      action: set
-      int: 0
-    divisionbell_progress:
-      action: set
-      int: 0
-    bike_progress:
-      action: set
-      int: 0
-    wall_complete_count:
-      action: set
-      int: 0
-    dsotm_complete_count:
-      action: set
-      int: 0
-    animals_complete_count:
-      action: set
-      int: 0
-    wywh_complete_count:
-      action: set
-      int: 0
-    divisionbell_complete_count:
-      action: set
-      int: 0
-    eclipse_complete_count:
-      action: set
-      int: 0
-    pending_mode:
-      action: set
-      string: "none"
-
   set_active_mode_wall:
     active_main_mode:
       action: set
-      string: "wall"
-
+      string: wall
+ 
   set_active_mode_dsotm:
     active_main_mode:
       action: set
-      string: "dsotm"
-
+      string: dsotm
+ 
   set_active_mode_animals:
     active_main_mode:
       action: set
-      string: "animals"
-
+      string: animals
+ 
   set_active_mode_wywh:
     active_main_mode:
       action: set
-      string: "wywh"
-
+      string: wywh
+ 
   set_active_mode_divisionbell:
     active_main_mode:
       action: set
-      string: "divisionbell"
-
+      string: divisionbell
+ 
   set_active_mode_bike:
     active_main_mode:
       action: set
-      string: "bike"
-
+      string: bike
+ 
   set_active_mode_high_hopes:
     active_main_mode:
       action: set
-      string: "high_hopes"
-
+      string: high_hopes
+ 
   set_active_mode_eclipse:
     active_main_mode:
       action: set
-      string: "eclipse"
-
+      string: eclipse
+ 
   clear_active_mode:
     active_main_mode:
       action: set
-      string: "none"
-
+      string: inactive
+ 
   wall_mode_completed:
     wall_complete_count:
       action: add
       int: 1
-
+ 
   dsotm_mode_completed:
     dsotm_complete_count:
       action: add
       int: 1
-
+ 
   animals_mode_completed:
     animals_complete_count:
       action: add
       int: 1
-
+ 
   wywh_mode_completed:
     wywh_complete_count:
       action: add
       int: 1
-
+ 
   divisionbell_mode_completed:
     divisionbell_complete_count:
       action: add
       int: 1
-
+ 
   eclipse_mode_completed:
     eclipse_complete_count:
       action: add
       int: 1
-
+ 
+ 
 # -------------------
-# EVENTS
+# EVENT PLAYER
 # -------------------
-
+#
+# COMPLETION ROUTING PATTERN (applies to all modes):
+#
+#   The Wall (custom mode — runs all ball):
+#     SUCCESS path:  wall_mode_completed → clear_active_mode (direct, handled below)
+#     FAILURE path:  the_wall_stopped    → clear_active_mode (timer expiry only)
+#
+#   Other main modes (standard MPF modes — start/stop normally):
+#     SUCCESS path:  *_mode_completed → clear_active_mode (direct, handled below)
+#     STOP path:     mode_*_stopped   → clear_active_mode (covers both success and failure)
+#
+#   Bike / High Hopes / Eclipse (standard MPF modes):
+#     STOP path:     mode_*_stopped   → clear_active_mode
+#
+# NOTE: *_mode_completed events must NEVER fire themselves. The variable_player
+# block above handles the count increment. No event_player entry for self-firing.
+ 
 event_player:
-  mode_the_wall_started:
+ 
+  # --- SET ACTIVE MODE ---
+  the_wall_activated:
     - set_active_mode_wall
-
+ 
   mode_dsotm_started:
     - set_active_mode_dsotm
-
+ 
   mode_animals_started:
     - set_active_mode_animals
-
+ 
   mode_wywh_started:
     - set_active_mode_wywh
-
+ 
   mode_divisionbell_started:
     - set_active_mode_divisionbell
-
+ 
   mode_bike_started:
     - set_active_mode_bike
-
+ 
   mode_high_hopes_started:
     - set_active_mode_high_hopes
-
+ 
   mode_eclipse_started:
     - set_active_mode_eclipse
-
-  mode_the_wall_stopped:
+ 
+  # --- CLEAR ACTIVE MODE — SUCCESS PATHS ---
+  # wall_mode_completed fires when subway opto triggers with wall_qualified == 1
+  # This is the direct success path — does NOT go through the_wall_stopped
+  wall_mode_completed:
     - clear_active_mode
-
+ 
+  # Standard modes clear on their own completed event (fired by each mode's yaml)
+  dsotm_mode_completed:
+    - clear_active_mode
+ 
+  animals_mode_completed:
+    - clear_active_mode
+ 
+  wywh_mode_completed:
+    - clear_active_mode
+ 
+  divisionbell_mode_completed:
+    - clear_active_mode
+ 
+  # --- CLEAR ACTIVE MODE — FAILURE / STOP PATHS ---
+  # the_wall_stopped fires ONLY on timer expiry (not on successful completion)
+  the_wall_stopped:
+    - clear_active_mode
+ 
+  # Standard modes also clear when stopped (covers timer expiry and any other stop)
   mode_dsotm_stopped:
     - clear_active_mode
-
+ 
   mode_animals_stopped:
     - clear_active_mode
-
+ 
   mode_wywh_stopped:
     - clear_active_mode
-
+ 
   mode_divisionbell_stopped:
     - clear_active_mode
-
+ 
   mode_bike_stopped:
     - clear_active_mode
-
+ 
   mode_high_hopes_stopped:
     - clear_active_mode
-
+ 
   mode_eclipse_stopped:
     - clear_active_mode
-
-  # Track completions - these events will be fired by each mode when completed
-  wall_mode_completed:
-    - wall_mode_completed
-
-  dsotm_mode_completed:
-    - dsotm_mode_completed
-
-  animals_mode_completed:
-    - animals_mode_completed
-
-  wywh_mode_completed:
-    - wywh_mode_completed
-
-  divisionbell_mode_completed:
-    - divisionbell_mode_completed
-
-  eclipse_mode_completed:
-    - eclipse_mode_completed
-
-  # Check for Eclipse qualification after each main mode completes
+ 
+  # --- ECLIPSE QUALIFICATION CHECK ---
+  # Fires eclipse_qualified when all 5 main modes have been completed at least once.
+  # Checked on each mode_completed event in case the final completion triggers it.
   "wall_mode_completed{current_player.wall_complete_count >= 1 and current_player.dsotm_complete_count >= 1 and current_player.animals_complete_count >= 1 and current_player.wywh_complete_count >= 1 and current_player.divisionbell_complete_count >= 1}":
     - eclipse_qualified
-
+ 
   "dsotm_mode_completed{current_player.wall_complete_count >= 1 and current_player.dsotm_complete_count >= 1 and current_player.animals_complete_count >= 1 and current_player.wywh_complete_count >= 1 and current_player.divisionbell_complete_count >= 1}":
     - eclipse_qualified
-
+ 
   "animals_mode_completed{current_player.wall_complete_count >= 1 and current_player.dsotm_complete_count >= 1 and current_player.animals_complete_count >= 1 and current_player.wywh_complete_count >= 1 and current_player.divisionbell_complete_count >= 1}":
     - eclipse_qualified
-
+ 
   "wywh_mode_completed{current_player.wall_complete_count >= 1 and current_player.dsotm_complete_count >= 1 and current_player.animals_complete_count >= 1 and current_player.wywh_complete_count >= 1 and current_player.divisionbell_complete_count >= 1}":
     - eclipse_qualified
-
+ 
   "divisionbell_mode_completed{current_player.wall_complete_count >= 1 and current_player.dsotm_complete_count >= 1 and current_player.animals_complete_count >= 1 and current_player.wywh_complete_count >= 1 and current_player.divisionbell_complete_count >= 1}":
     - eclipse_qualified

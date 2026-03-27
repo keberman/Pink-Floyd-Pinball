@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://c02qtkuebkgv3"
+path="res://.godot/imported/12 The Trial.mp3-066d145a918012b539a05e27be2b931c.mp3str"
+
+[deps]
+
+source_file="res://modes/the_wall/sounds/music/12 The Trial.mp3"
+dest_files=["res://.godot/imported/12 The Trial.mp3-066d145a918012b539a05e27be2b931c.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

@@ -1,6 +1,56 @@
-[gd_scene load_steps=2 format=3 uid="uid://bperaajp7en5c"]
+[gd_scene load_steps=7 format=3 uid="uid://bperaajp7en5c"]
 
 [ext_resource type="Script" path="res://addons/mpf-gmc/classes/mpf_slide.gd" id="1_rjsda"]
+[ext_resource type="FontFile" uid="uid://byav563fvutp3" path="res://fonts/led-dot-matrix.ttf" id="2_xm301"]
+[ext_resource type="Script" path="res://addons/mpf-gmc/classes/mpf_variable.gd" id="3_6b0wc"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_anwpw"]
+content_margin_left = 12.0
+content_margin_top = 8.0
+content_margin_right = 12.0
+content_margin_bottom = 8.0
+bg_color = Color(0, 0, 0, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.666667, 0.666667, 0.666667, 1)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_itlnh"]
+content_margin_left = 12.0
+content_margin_top = 8.0
+content_margin_right = 12.0
+content_margin_bottom = 8.0
+bg_color = Color(0, 0, 0, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.666667, 0.666667, 0.666667, 1)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_m42dj"]
+content_margin_left = 12.0
+content_margin_top = 8.0
+content_margin_right = 12.0
+content_margin_bottom = 8.0
+bg_color = Color(0, 0, 0, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.666667, 0.666667, 0.666667, 1)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
 
 [node name="ModeStart" type="Control"]
 layout_mode = 3
@@ -8,6 +58,107 @@ anchors_preset = 0
 script = ExtResource("1_rjsda")
 
 [node name="ColorRect" type="ColorRect" parent="."]
+layout_mode = 0
 offset_right = 2560.0
 offset_bottom = 1600.0
 color = Color(0, 0, 0, 1)
+
+[node name="player_score" type="Label" parent="."]
+layout_mode = 0
+offset_left = 1787.0
+offset_top = 1192.0
+offset_right = 2290.0
+offset_bottom = 1408.0
+theme_override_colors/font_color = Color(0.960784, 0.960784, 0.960784, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/shadow_offset_y = 7
+theme_override_constants/outline_size = 12
+theme_override_fonts/font = ExtResource("2_xm301")
+theme_override_font_sizes/font_size = 80
+theme_override_styles/normal = SubResource("StyleBoxFlat_anwpw")
+text = "100000"
+horizontal_alignment = 1
+vertical_alignment = 1
+script = ExtResource("3_6b0wc")
+variable_name = "score"
+comma_separate = true
+min_digits = 2
+
+[node name="player_ball" type="Label" parent="."]
+layout_mode = 0
+offset_left = 209.0
+offset_top = 1268.0
+offset_right = 550.0
+offset_bottom = 1379.0
+theme_override_colors/font_color = Color(0.960784, 0.960784, 0.960784, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/shadow_offset_y = 7
+theme_override_constants/outline_size = 12
+theme_override_fonts/font = ExtResource("2_xm301")
+theme_override_font_sizes/font_size = 50
+theme_override_styles/normal = SubResource("StyleBoxFlat_itlnh")
+text = "BALL 1"
+horizontal_alignment = 1
+vertical_alignment = 1
+script = ExtResource("3_6b0wc")
+variable_name = "ball"
+min_digits = 1
+template_string = "ball %s"
+
+[node name="player_number" type="Label" parent="."]
+layout_mode = 0
+offset_left = 1795.0
+offset_top = 164.0
+offset_right = 2275.0
+offset_bottom = 270.0
+theme_override_colors/font_color = Color(0.960784, 0.960784, 0.960784, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/shadow_offset_y = 7
+theme_override_constants/outline_size = 12
+theme_override_fonts/font = ExtResource("2_xm301")
+theme_override_font_sizes/font_size = 50
+theme_override_styles/normal = SubResource("StyleBoxFlat_m42dj")
+text = "Player 1"
+horizontal_alignment = 1
+vertical_alignment = 1
+script = ExtResource("3_6b0wc")
+variable_name = "number"
+min_digits = 1
+template_string = "Player %s"
+min_players = 1
+
+[node name="timer" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = 2560.0
+offset_bottom = 1600.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_fonts/font = ExtResource("2_xm301")
+theme_override_font_sizes/font_size = 240
+text = "60 SECONDS"
+horizontal_alignment = 1
+vertical_alignment = 1
+script = ExtResource("3_6b0wc")
+variable_name = "vuk_seconds_remaining"
+template_string = "%s"
+
+[node name="shoot vuk" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = 1737.0
+offset_bottom = 513.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_fonts/font = ExtResource("2_xm301")
+theme_override_font_sizes/font_size = 120
+text = "SHOOT VUK"
+horizontal_alignment = 1
+vertical_alignment = 1

@@ -1,10 +1,10 @@
-[gd_scene load_steps=7 format=3 uid="uid://iq45ge8x18j0"]
+[gd_scene load_steps=7 format=3 uid="uid://d183vjyp174ry"]
 
-[ext_resource type="Script" path="res://addons/mpf-gmc/classes/mpf_slide.gd" id="1_ommlg"]
-[ext_resource type="FontFile" uid="uid://byav563fvutp3" path="res://fonts/led-dot-matrix.ttf" id="2_jrvt8"]
-[ext_resource type="Script" path="res://addons/mpf-gmc/classes/mpf_variable.gd" id="3_wgxq4"]
+[ext_resource type="Script" path="res://addons/mpf-gmc/classes/mpf_slide.gd" id="1_78qyn"]
+[ext_resource type="FontFile" uid="uid://byav563fvutp3" path="res://fonts/led-dot-matrix.ttf" id="2_68nu5"]
+[ext_resource type="Script" path="res://addons/mpf-gmc/classes/mpf_variable.gd" id="3_hbf0x"]
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_tfjt2"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_d2204"]
 content_margin_left = 12.0
 content_margin_top = 8.0
 content_margin_right = 12.0
@@ -20,7 +20,7 @@ corner_radius_top_right = 6
 corner_radius_bottom_right = 6
 corner_radius_bottom_left = 6
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_283w0"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_xrwed"]
 content_margin_left = 12.0
 content_margin_top = 8.0
 content_margin_right = 12.0
@@ -36,7 +36,7 @@ corner_radius_top_right = 6
 corner_radius_bottom_right = 6
 corner_radius_bottom_left = 6
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_sv48q"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_7b1sc"]
 content_margin_left = 12.0
 content_margin_top = 8.0
 content_margin_right = 12.0
@@ -52,10 +52,10 @@ corner_radius_top_right = 6
 corner_radius_bottom_right = 6
 corner_radius_bottom_left = 6
 
-[node name="WishYouWereHere" type="Control"]
+[node name="TheWall" type="Control"]
 layout_mode = 3
 anchors_preset = 0
-script = ExtResource("1_ommlg")
+script = ExtResource("1_78qyn")
 
 [node name="ColorRect" type="ColorRect" parent="."]
 layout_mode = 0
@@ -74,13 +74,13 @@ theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
 theme_override_constants/shadow_offset_y = 7
 theme_override_constants/outline_size = 12
-theme_override_fonts/font = ExtResource("2_jrvt8")
+theme_override_fonts/font = ExtResource("2_68nu5")
 theme_override_font_sizes/font_size = 80
-theme_override_styles/normal = SubResource("StyleBoxFlat_tfjt2")
+theme_override_styles/normal = SubResource("StyleBoxFlat_d2204")
 text = "100000"
 horizontal_alignment = 1
 vertical_alignment = 1
-script = ExtResource("3_wgxq4")
+script = ExtResource("3_hbf0x")
 variable_name = "score"
 comma_separate = true
 min_digits = 2
@@ -96,13 +96,13 @@ theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
 theme_override_constants/shadow_offset_y = 7
 theme_override_constants/outline_size = 12
-theme_override_fonts/font = ExtResource("2_jrvt8")
+theme_override_fonts/font = ExtResource("2_68nu5")
 theme_override_font_sizes/font_size = 50
-theme_override_styles/normal = SubResource("StyleBoxFlat_283w0")
+theme_override_styles/normal = SubResource("StyleBoxFlat_xrwed")
 text = "BALL 1"
 horizontal_alignment = 1
 vertical_alignment = 1
-script = ExtResource("3_wgxq4")
+script = ExtResource("3_hbf0x")
 variable_name = "ball"
 min_digits = 1
 template_string = "ball %s"
@@ -118,13 +118,13 @@ theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
 theme_override_constants/shadow_offset_y = 7
 theme_override_constants/outline_size = 12
-theme_override_fonts/font = ExtResource("2_jrvt8")
+theme_override_fonts/font = ExtResource("2_68nu5")
 theme_override_font_sizes/font_size = 50
-theme_override_styles/normal = SubResource("StyleBoxFlat_sv48q")
+theme_override_styles/normal = SubResource("StyleBoxFlat_7b1sc")
 text = "Player 1"
 horizontal_alignment = 1
 vertical_alignment = 1
-script = ExtResource("3_wgxq4")
+script = ExtResource("3_hbf0x")
 variable_name = "number"
 min_digits = 1
 template_string = "Player %s"
@@ -139,14 +139,15 @@ offset_right = 2560.0
 offset_bottom = 1600.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_fonts/font = ExtResource("2_jrvt8")
+theme_override_fonts/font = ExtResource("2_68nu5")
 theme_override_font_sizes/font_size = 240
 text = "90 SECONDS"
 horizontal_alignment = 1
 vertical_alignment = 1
-script = ExtResource("3_wgxq4")
-variable_name = "timer_vuk_window_timer_tick"
+script = ExtResource("3_hbf0x")
+variable_name = "wall_seconds_remaining"
 template_string = "%s"
+update_event = "player_wall_seconds_remaining"
 
 [node name="shoot vuk" type="Label" parent="."]
 layout_mode = 1
@@ -157,8 +158,10 @@ offset_right = 1737.0
 offset_bottom = 513.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_fonts/font = ExtResource("2_jrvt8")
+theme_override_fonts/font = ExtResource("2_68nu5")
 theme_override_font_sizes/font_size = 120
-text = "HIT SPINNERS 20 TIMES"
+text = "TEAR DOWN THE WALL
+
+SHOOT HAMMER ENTRANCE"
 horizontal_alignment = 1
 vertical_alignment = 1

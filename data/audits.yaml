@@ -1,32 +1,32 @@
 events:
   game_ended: 317
-  game_started: 858
+  game_started: 901
 missing_switches:
-  s_a: 388
-  s_aa: 30
-  s_db_1: 269
-  s_db_2: 148
-  s_db_3: 148
+  s_a: 431
+  s_aa: 17
+  s_db_1: 17
+  s_db_2: 17
+  s_db_3: 17
   s_eos_left: 1
   s_eos_right: 1
-  s_fldt: 344
-  s_frdt: 344
+  s_fldt: 387
+  s_frdt: 387
   s_hammer_entrance: 1
-  s_i: 30
-  s_l: 23
+  s_i: 17
+  s_l: 17
   s_launch: 6
-  s_left_flipper: 8
+  s_left_flipper: 51
   s_left_flipper_eos: 363
-  s_left_hs_spinner: 6
-  s_left_inlane: 5
+  s_left_hs_spinner: 8
+  s_left_inlane: 6
   s_left_inner_lane: 357
   s_left_outer_lane: 153
-  s_left_outlane: 4
+  s_left_outlane: 6
   s_left_sling: 363
-  s_left_upper_ro: 388
-  s_m: 23
+  s_left_upper_ro: 431
+  s_m: 17
   s_mead: 267
-  s_n: 388
+  s_n: 431
   s_opto_1: 62
   s_opto_2: 78
   s_opto_3: 62
@@ -35,33 +35,31 @@ missing_switches:
   s_opto_6: 62
   s_percy: 85
   s_plunger: 363
-  s_pop_1: 148
-  s_pop_2: 196
+  s_pop_1: 191
+  s_pop_2: 239
   s_pop_bumper_1: 357
   s_pop_bumper_2: 357
   s_pop_bumper_3: 357
-  s_right_flipper: 8
+  s_right_flipper: 51
   s_right_flipper_eos: 363
-  s_right_hs_spinner: 2
-  s_right_inlane: 23
+  s_right_hs_spinner: 45
   s_right_inner_lane: 357
   s_right_outer_lane: 357
-  s_right_outlane: 23
+  s_right_outlane: 25
   s_right_sling: 363
-  s_right_spinner: 23
-  s_right_upper_ro: 148
-  s_s: 23
+  s_right_spinner: 17
+  s_right_upper_ro: 191
+  s_s: 17
   s_scanlan: 204
-  s_sling_left: 8
-  s_sling_right: 23
+  s_sling_right: 17
   s_start: 6
-  s_start_button: 7
-  s_trough_1: 1
-  s_trough_2: 1
-  s_trough_3: 1
-  s_trough_4: 1
-  s_trough_5: 1
-  s_trough_6: 1
+  s_start_button: 50
+  s_trough_1: 31
+  s_trough_2: 31
+  s_trough_3: 31
+  s_trough_4: 31
+  s_trough_5: 31
+  s_trough_6: 31
   s_trough_ball_1: 363
   s_trough_ball_2: 363
   s_trough_ball_3: 363
@@ -85,9 +83,9 @@ player:
     - 16400
     total: 324
 shots:
-  bike_left_inlane: 65
-  bike_left_orbit: 415
-  bike_right_inlane: 72
+  bike_left_inlane: 99
+  bike_left_orbit: 601
+  bike_right_inlane: 102
   mead_shot: 223
   percy_shot: 56
   scanlan_shot: 121
@@ -101,34 +99,34 @@ shots:
   wall_top_right: 124
 switches:
   s_a: 0
-  s_aa: 99
+  s_aa: 100
   s_auto_launcher: 0
   s_ball_drain: 0
   s_bdt: 8
-  s_db_1: 3
-  s_db_2: 2
-  s_db_3: 3
+  s_db_1: 4
+  s_db_2: 3
+  s_db_3: 4
   s_eos_left: 1070
   s_eos_right: 1235
   s_fldt: 3
   s_frdt: 2
   s_hammer_entrance: 2
-  s_hammers_entrance: 38
-  s_i: 495
-  s_l: 163
+  s_hammers_entrance: 102
+  s_i: 496
+  s_l: 164
   s_launch: 0
-  s_launch_button: 1225
+  s_launch_button: 1255
   s_left_flipper: 6176
   s_left_flipper_eos: 0
-  s_left_hs_spinner: 2994
-  s_left_inlane: 727
+  s_left_hs_spinner: 2995
+  s_left_inlane: 758
   s_left_inner_lane: 0
   s_left_outer_lane: 0
-  s_left_outlane: 239
+  s_left_outlane: 250
   s_left_sling: 7
-  s_left_spinner: 5276
+  s_left_spinner: 5462
   s_left_upper_ro: 0
-  s_m: 296
+  s_m: 298
   s_mead: 0
   s_n: 0
   s_opto_1: 13
@@ -147,28 +145,28 @@ switches:
   s_right_flipper: 8096
   s_right_flipper_eos: 0
   s_right_hs_spinner: 3163
-  s_right_inlane: 790
+  s_right_inlane: 818
   s_right_inner_lane: 0
   s_right_outer_lane: 0
-  s_right_outlane: 380
+  s_right_outlane: 382
   s_right_sling: 3
-  s_right_spinner: 1411
+  s_right_spinner: 1423
   s_right_upper_ro: 6
-  s_s: 86
+  s_s: 87
   s_scanlan: 0
-  s_shooter_lane: 1319
-  s_sling_left: 606
-  s_sling_right: 1240
+  s_shooter_lane: 1359
+  s_sling_left: 613
+  s_sling_right: 1245
   s_start: 38
   s_start_button: 89
-  s_subway_opto: 207
+  s_subway_opto: 226
   s_switch_2: 0
-  s_trough_1: 1065
-  s_trough_2: 1066
-  s_trough_3: 1064
-  s_trough_4: 1058
-  s_trough_5: 1056
-  s_trough_6: 1070
+  s_trough_1: 1069
+  s_trough_2: 1070
+  s_trough_3: 1068
+  s_trough_4: 1062
+  s_trough_5: 1060
+  s_trough_6: 1074
   s_trough_ball_1: 4
   s_trough_ball_2: 4
   s_trough_ball_3: 1
@@ -177,11 +175,11 @@ switches:
   s_trough_ball_6: 1
   s_trough_ball_jam: 3
   s_trough_eject_coil: 0
-  s_trough_jam: 1153
-  s_vuk_opto: 1253
-  s_wall_bottom_center: 36
-  s_wall_bottom_left: 32
-  s_wall_bottom_right: 57
-  s_wall_top_center: 149
-  s_wall_top_left: 80
-  s_wall_top_right: 154
+  s_trough_jam: 1187
+  s_vuk_opto: 1296
+  s_wall_bottom_center: 86
+  s_wall_bottom_left: 86
+  s_wall_bottom_right: 123
+  s_wall_top_center: 199
+  s_wall_top_left: 163
+  s_wall_top_right: 204

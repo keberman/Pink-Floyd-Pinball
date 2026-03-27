@@ -1,0 +1,294 @@
+#config_version=6
+ 
+# the_wall mode — runs entire ball
+#
+# PHASE 1 — QUALIFY:
+#   Knock down all 6 wall targets → wall_qualify_complete → mode_start opens VUK window
+#   Targets reset. Shoot VUK → start_the_wall fires → phase 2 begins.
+#
+# PHASE 2 — ACTIVE MODE:
+#   Knock down all 6 again → BDT knocks down → hammer entrance opens
+#   Ball enters hammer entrance → travels subway → s_subway_opto fires → wall_mode_completed
+#
+# FAILURE: 90s timer expires → wall_clear, wall_mode_active resets, player can re-qualify
+# s_subway_opto is the ONLY valid completion trigger.
+#
+# COMPLETION ROUTING:
+#   SUCCESS:  wall_mode_completed → game_logic clears active_main_mode directly
+#   FAILURE:  timer_wall_timer_complete → the_wall_stopped → game_logic clears active_main_mode
+#   These two paths are intentionally separate. wall_mode_completed does NOT fire the_wall_stopped.
+ 
+mode:
+  start_events: ball_started
+  stop_events: ball_ending
+  priority: 200
+ 
+ 
+# -------------------
+# TIMERS
+# -------------------
+ 
+timers:
+  wall_timer:
+    start_value: 90
+    end_value: 0
+    direction: down
+    control_events:
+      - event: start_the_wall
+        action: reset
+      - event: start_the_wall
+        action: start
+      - event: wall_mode_completed
+        action: stop
+      - event: timer_wall_timer_complete
+        action: stop
+ 
+ 
+# -------------------
+# VARIABLE PLAYER
+# -------------------
+ 
+variable_player:
+  # On ball start — clear all wall state including mode active flag
+  mode_the_wall_started:
+    wall_top_right_down:
+      action: set
+      int: 0
+    wall_top_center_down:
+      action: set
+      int: 0
+    wall_top_left_down:
+      action: set
+      int: 0
+    wall_bottom_right_down:
+      action: set
+      int: 0
+    wall_bottom_center_down:
+      action: set
+      int: 0
+    wall_bottom_left_down:
+      action: set
+      int: 0
+    wall_qualified:
+      action: set
+      int: 0
+    wall_mode_active:
+      action: set
+      int: 0
+ 
+  # Track each target going down
+  s_wall_top_right_active:
+    wall_top_right_down:
+      action: set
+      int: 1
+ 
+  s_wall_top_center_active:
+    wall_top_center_down:
+      action: set
+      int: 1
+ 
+  s_wall_top_left_active:
+    wall_top_left_down:
+      action: set
+      int: 1
+ 
+  s_wall_bottom_right_active:
+    wall_bottom_right_down:
+      action: set
+      int: 1
+ 
+  s_wall_bottom_center_active:
+    wall_bottom_center_down:
+      action: set
+      int: 1
+ 
+  s_wall_bottom_left_active:
+    wall_bottom_left_down:
+      action: set
+      int: 1
+ 
+  # Phase 2 begins — VUK shot made, mode is now active
+  start_the_wall:
+    wall_mode_active:
+      action: set
+      int: 1
+ 
+  # Set pending mode when qualifying — mode_start reads this to know which mode to launch
+  wall_qualify_complete:
+    pending_mode:
+      action: set
+      string: wall
+ 
+  # Second set of 6 complete — set qualified flag for subway completion
+  wall_drop_complete:
+    wall_qualified:
+      action: set
+      int: 1
+ 
+  # Successful completion — reset mode active flag so player can re-qualify next ball
+  wall_mode_completed:
+    wall_mode_active:
+      action: set
+      int: 0
+ 
+  # Clear target state only — wall_mode_active intentionally NOT cleared here
+  # wall_mode_active only resets on ball start or successful completion
+  wall_clear:
+    wall_top_right_down:
+      action: set
+      int: 0
+    wall_top_center_down:
+      action: set
+      int: 0
+    wall_top_left_down:
+      action: set
+      int: 0
+    wall_bottom_right_down:
+      action: set
+      int: 0
+    wall_bottom_center_down:
+      action: set
+      int: 0
+    wall_bottom_left_down:
+      action: set
+      int: 0
+    wall_qualified:
+      action: set
+      int: 0
+ 
+  timer_wall_timer_tick:
+    wall_seconds_remaining:
+      action: set
+      int: ticks_remaining
+ 
+ 
+# -------------------
+# EVENT PLAYER
+# -------------------
+ 
+event_player:
+  # Reset all hardware on ball start, clear state at 600ms
+  mode_the_wall_started:
+    - fire_upper_reset
+    - fire_lower_reset|200ms
+    - fire_hammer_reset|400ms
+    - wall_clear|600ms
+ 
+  # VUK shot made — present mode to player, reset targets for phase 2
+  start_the_wall:
+    - the_wall_activated
+    - fire_upper_reset
+    - fire_lower_reset|200ms
+    - fire_hammer_reset|400ms
+    - wall_clear|600ms
+ 
+  # Timer expired — clear state, reset hardware, notify game_logic, player can re-qualify
+  # the_wall_stopped is ONLY fired on timer expiry — NOT on successful completion
+  timer_wall_timer_complete:
+    - the_wall_stopped
+    - wall_clear
+    - fire_upper_reset
+    - fire_lower_reset|200ms
+    - fire_hammer_reset|400ms
+ 
+  # Each wall switch hit → schedule a completion check
+  s_wall_top_right_active:
+    - check_wall_complete|50ms
+ 
+  s_wall_top_center_active:
+    - check_wall_complete|50ms
+ 
+  s_wall_top_left_active:
+    - check_wall_complete|50ms
+ 
+  s_wall_bottom_right_active:
+    - check_wall_complete|50ms
+ 
+  s_wall_bottom_center_active:
+    - check_wall_complete|50ms
+ 
+  s_wall_bottom_left_active:
+    - check_wall_complete|50ms
+ 
+  # PHASE 1 — All 6 down, mode not yet active → qualify, open VUK window
+  "check_wall_complete{current_player.wall_top_right_down == 1 and current_player.wall_top_center_down == 1 and current_player.wall_top_left_down == 1 and current_player.wall_bottom_right_down == 1 and current_player.wall_bottom_center_down == 1 and current_player.wall_bottom_left_down == 1 and current_player.wall_mode_active == 0}":
+    - wall_qualify_complete
+ 
+  # PHASE 2 — All 6 down, mode active → open hammer entrance
+  "check_wall_complete{current_player.wall_top_right_down == 1 and current_player.wall_top_center_down == 1 and current_player.wall_top_left_down == 1 and current_player.wall_bottom_right_down == 1 and current_player.wall_bottom_center_down == 1 and current_player.wall_bottom_left_down == 1 and current_player.wall_mode_active == 1}":
+    - wall_drop_complete
+ 
+  # BDT knocks down — hammer entrance opens
+  wall_drop_complete:
+    - fire_hammer_knockdown
+ 
+  # Ball hit hammer entrance while not qualified — reset it back up
+  "s_hammers_entrance_active{current_player.wall_qualified == 0}":
+    - fire_hammer_reset|100ms
+ 
+  # Unqualified subway entry — eject only, do not touch wall targets
+  "s_subway_opto_active{current_player.wall_qualified == 0}":
+    - post_vuk_eject
+ 
+  # VALID COMPLETION — subway opto while qualified
+  # wall_mode_completed fires here. game_logic handles clear_active_mode directly.
+  # Do NOT fire the_wall_stopped here — that is reserved for timer expiry only.
+  "s_subway_opto_active{current_player.wall_qualified == 1}":
+    - fire_upper_reset
+    - fire_lower_reset|200ms
+    - fire_hammer_reset|400ms
+    - wall_clear|600ms
+    - wall_mode_completed|650ms
+ 
+ 
+# -------------------
+# COIL PLAYER
+# -------------------
+ 
+coil_player:
+  fire_upper_reset:
+    c_3_bank_upper: pulse
+ 
+  fire_lower_reset:
+    c_3_bank_lower: pulse
+ 
+  fire_hammer_reset:
+    c_hammer_entrance: pulse
+ 
+  fire_hammer_knockdown:
+    c_hammer_entrance_knockdown: pulse
+ 
+  post_vuk_eject:
+    c_vuk: pulse
+ 
+ 
+# -------------------
+# SLIDE PLAYER
+# -------------------
+ 
+slide_player:
+  the_wall_activated: the_wall
+  wall_mode_completed:
+    the_wall:
+      action: remove
+  the_wall_stopped:
+    the_wall:
+      action: remove
+ 
+ 
+# -------------------
+# SOUND PLAYER
+# -------------------
+ 
+sound_player:
+  the_wall_activated:
+    the_trial_trimmedv2:
+      bus: mode_music
+  wall_mode_completed:
+    the_trial_trimmedv2:
+      action: stop
+      bus: mode_music
+  the_wall_stopped:
+    the_trial_trimmedv2:
+      action: stop
+      bus: mode_music
