@@ -1,35 +1,45 @@
 #config_version=6
-
+ 
 #bike side mode. light the 4 inlane and outlanes fully twice.
 #follow the lit inserts to chase random shots through the orbits and ramps.
-
+ 
 mode:
   start_events: start_bike
-  stop_events: 
+  stop_events:
     - stop_bike
     - timer_bike_timer_complete
   priority: 200
-
+ 
 slide_player:
   mode_bike_started: bike
-
+  mode_bike_stopped:                        # ← ADDED: remove slide on stop
+    bike:
+      action: remove
+ 
 sound_player:
   mode_bike_started:
     bike_1:
       bus: mode_music
+  mode_bike_stopped:                        # ← ADDED: stop audio on stop
+    bike_1:
+      action: stop
+      bus: mode_music
   mode_bike_will_stop:
     base_radio:
       bus: music
-
+ 
 variable_player:
   bike_left_orbit_hit:
     score: 10_000
-
+ 
 timers:
   bike_timer:
     start_value: 60
     end_value: 0
     direction: down
-    tick_interval:  1s
+    tick_interval: 1s
     start_running: true
+    # ⚠️ Timer is active (fires stop after 60s) but no display — intentional for now.
+    # timer_bike_timer_complete fires stop_events → mode stops cleanly.
+    # TODO: decide whether to add display or remove timer entirely.
 

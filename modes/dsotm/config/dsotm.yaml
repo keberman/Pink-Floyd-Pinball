@@ -1,10 +1,62 @@
 #config_version=6
-
-#dark side mode. shoot left and right ramps 4 times to light dark side. start 60
-#second timer to shoot vuk to start mode. complete 4 ramp shots on either ramp within
-#60 seconds to complete mode.
-
+ 
+#==============================================================================
+# DSOTM MODE — STUB
+# Pink Floyd: The Dark Side of the Moon (1973) — Money
+# Qualify: 4 shots each on left ramp AND right ramp
+# Objective (not yet built): Ramp shot count TBD
+# Timer: 90s — No mercy.
+#
+# ⚠️  NOT in config.yaml modes list — ramp microswitches not yet installed.
+#     Do NOT add to config.yaml until ramp hardware confirmed in WW#3.
+#     Player vars can be added to config.yaml player_vars now (harmless).
+#==============================================================================
+ 
 mode:
-  start_events: start_dark_side
-  stop_events: stop_dark_side
   priority: 200
+  start_events: start_dsotm
+  stop_events: timer_dsotm_timer_complete, dsotm_mode_completed, ball_ending
+ 
+timers:
+  dsotm_timer:
+    start_value: 90
+    end_value: 0
+    direction: down
+    control_events:
+      - event: mode_dsotm_started
+        action: reset
+      - event: mode_dsotm_started
+        action: start
+ 
+variable_player:
+  timer_dsotm_timer_tick:
+    dsotm_seconds_remaining:
+      action: set
+      int: ticks_remaining
+ 
+  dsotm_mode_completed:
+    dsotm_mode_active:
+      action: set
+      int: 0
+ 
+sound_player:
+  mode_dsotm_started:
+    money_trimmed:                                  # TODO: replace with actual trimmed filename
+      bus: mode_music
+  dsotm_mode_completed:
+    money_trimmed:
+      action: stop
+      bus: mode_music
+  mode_dsotm_stopped:
+    money_trimmed:
+      action: stop
+      bus: mode_music
+ 
+slide_player:
+  mode_dsotm_started: dsotm
+  dsotm_mode_completed:
+    dsotm:
+      action: remove
+  mode_dsotm_stopped:
+    dsotm:
+      action: remove

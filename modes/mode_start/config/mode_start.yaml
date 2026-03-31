@@ -1,14 +1,15 @@
 #config_version=6
  
 ##############################################################################
-#config_version=6
- 
-##############################################################################
 # MODE_START
 # Shared VUK qualification window for all main modes
 # Activated when any mode qualification is complete
 # 60 second window to hit VUK → mode launches
-# Timeout → pending mode progress resets to 0, other modes untouched
+# Timeout → pending mode progress resets, physical hardware restored
+#
+# ⚠️ LESSON 12: qualify_complete events cannot appear in BOTH start_events
+# AND variable_player in the same file. pending_mode is set from each
+# qualifying mode's own yaml instead.
 ##############################################################################
  
 mode:
@@ -46,6 +47,8 @@ timers:
  
 ##############################################################################
 # VARIABLE PLAYER
+# pending_mode is NOT set here — set in each qualifying mode's own yaml.
+# See Lesson 12.
 ##############################################################################
  
 variable_player:
@@ -78,7 +81,7 @@ variable_player:
     divisionbell_progress:
       action: set
       int: 0
-
+ 
   timer_vuk_window_timer_tick:
     vuk_seconds_remaining:
       action: set
@@ -120,7 +123,10 @@ event_player:
     - start_divisionbell
  
   "timer_vuk_window_timer_complete{current_player.pending_mode == 'wall'}":
-    - reset_wall_progress
+    - wall_clear
+    - fire_upper_reset
+    - fire_lower_reset|200ms
+    - fire_hammer_reset|400ms
  
   "timer_vuk_window_timer_complete{current_player.pending_mode == 'dsotm'}":
     - reset_dsotm_progress

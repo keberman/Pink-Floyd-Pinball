@@ -145,8 +145,9 @@ text = "90 SECONDS"
 horizontal_alignment = 1
 vertical_alignment = 1
 script = ExtResource("3_j3oq3")
-variable_name = "timer_vuk_window_timer_tick"
+variable_name = "dsotm_seconds_remaining"
 template_string = "%s"
+update_event = "player_dsotm_seconds_remaining"
 
 [node name="shoot vuk" type="Label" parent="."]
 layout_mode = 1

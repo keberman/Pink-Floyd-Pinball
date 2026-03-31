@@ -24,13 +24,6 @@ fast:
         model: FP-I/O-1616
         order: 3
  
-#logging:
-#  console:
-#    level: warning
-#  file:
-#    path: logs/mpf.log
-#    level: debug
- 
 switches:
   s_start_button:
     number: cab-8
@@ -48,15 +41,6 @@ switches:
     number: cab-17
     debounce: normal
     tags: launch
- 
-#  s_eos_left:
-#    number: pf-0
-#    debounce: quick
-#    tags: left_flipper_eos
-#  s_eos_right:
-#    number: pf-1
-#    debounce: quick
-#    tags: right_flipper_eos
   s_sling_left:
     number: pf-2
     debounce: normal
@@ -167,7 +151,6 @@ switches:
     number: pf-30
     debounce: normal
     tags: playfield_active
- 
   s_fldt:
     number: aux-0
     debounce: normal
@@ -237,35 +220,32 @@ coils:
   c_flipper_right_hold:
     number: pf-5
     allow_enable: true
- 
   c_sling_left:
     number: pf-2
   c_sling_right:
     number: pf-1
- 
   c_trough_eject:
     number: pf-0
     default_pulse_ms: 20
   c_auto_plunger:
     number: pf-3
     default_pulse_ms: 30
- 
   c_fldt_dog:
     number: aux-0
-    default_pulse_ms: 50
-    max_pulse_ms: 100
-  c_frdt_pig:
+    default_pulse_ms: 35
+    max_pulse_ms: 50
+  c_frdt_sheep:
     number: aux-1
-    default_pulse_ms: 50
-    max_pulse_ms: 100
+    default_pulse_ms: 35
+    max_pulse_ms: 50
   c_3_bank_upper:
     number: aux-2
-    default_pulse_ms: 50
-    max_pulse_ms: 100
+    default_pulse_ms: 35
+    max_pulse_ms: 50
   c_hammer_entrance:
     number: aux-3
-    default_pulse_ms: 50
-    max_pulse_ms: 100
+    default_pulse_ms: 40
+    max_pulse_ms: 50
   c_post_1:
     number: aux-4
     default_pulse_ms: 30
@@ -288,8 +268,8 @@ coils:
     max_pulse_ms: 60
   c_3_bank_lower:
     number: aux-10
-    default_pulse_ms: 50
-    max_pulse_ms: 100
+    default_pulse_ms: 35
+    max_pulse_ms: 50
   c_fldt_knockdown:
     number: aux-11
     default_pulse_ms: 30
@@ -311,7 +291,6 @@ ball_devices:
     eject_targets: bd_shooter_lane
     tags: trough, home, drain
     eject_timeouts: 3s
- 
   bd_shooter_lane:
     ball_switches: s_shooter_lane
     eject_coil: c_auto_plunger
@@ -319,7 +298,6 @@ ball_devices:
     eject_targets: playfield
     player_controlled_eject_event: s_launch_button_active
     tags: playfield_active_switch
- 
   bd_vuk:
     ball_switches: s_vuk_opto
     eject_coil: c_vuk
@@ -336,17 +314,10 @@ flippers:
     main_coil: c_flipper_left_main
     hold_coil: c_flipper_left_hold
     activation_switch: s_left_flipper
-#    eos_switch: s_eos_left
-#    enable_events: machine_reset_phase_3
-#    disable_events: service_mode_entered
- 
   right_flipper:
     main_coil: c_flipper_right_main
     hold_coil: c_flipper_right_hold
     activation_switch: s_right_flipper
-#    eos_switch: s_eos_right
-#    enable_events: machine_reset_phase_3
-#    disable_events: service_mode_entered
  
 autofire_coils:
   sling_left:
@@ -375,15 +346,13 @@ modes:
   - base
   - bike
   - high_score
-#  - lower_test
-#  - drop_reset
   - game_logic
   - mode_start
   - the_wall
- 
-#coil_player:
-#  s_launch_button_active:
-#    c_vuk: pulse
+  - animals
+  - dsotm
+  - wywh
+  - divisionbell
  
 event_player:
   init_phase_3: start_mode_attract
@@ -408,18 +377,11 @@ sound_player:
   resume_base_radio:
     base_radio:
       bus: music
-#  game_ended:
-#    base_radio:
-#      action: stop
  
 virtual_platform_start_active_switches:
   - s_trough_1
   - s_trough_2
   - s_trough_3
- 
-# -------------------
-# PLAYER VARIABLES — Pre-declared with types
-# -------------------
  
 player_vars:
   active_main_mode:
@@ -486,5 +448,74 @@ player_vars:
     initial_value: 0
     value_type: int
   wall_mode_active:
+    initial_value: 0
+    value_type: int
+  # --- ANIMALS ---
+  animals_target_i:
+    initial_value: 0
+    value_type: int
+  animals_target_m:
+    initial_value: 0
+    value_type: int
+  animals_target_a:
+    initial_value: 0
+    value_type: int
+  animals_target_l:
+    initial_value: 0
+    value_type: int
+  animals_target_s:
+    initial_value: 0
+    value_type: int
+  animals_mode_active:
+    initial_value: 0
+    value_type: int
+  animals_seconds_remaining:
+    initial_value: 90
+    value_type: int
+  animals_fldt_hits:
+    initial_value: 0
+    value_type: int
+  animals_frdt_hits:
+    initial_value: 0
+    value_type: int
+  animals_last_hit:
+    initial_value: inactive
+    value_type: str
+  # --- WYWH ---
+  wywh_spinner_left:
+    initial_value: 0
+    value_type: int
+  wywh_spinner_right:
+    initial_value: 0
+    value_type: int
+  wywh_spinner_left_hs:
+    initial_value: 0
+    value_type: int
+  wywh_spinner_right_hs:
+    initial_value: 0
+    value_type: int
+  wywh_spin_count:
+    initial_value: 0
+    value_type: int
+  wywh_mode_active:
+    initial_value: 0
+    value_type: int
+  wywh_seconds_remaining:
+    initial_value: 90
+    value_type: int
+  # --- DIVISION BELL ---
+  db_pop_qualify_hits:
+    initial_value: 0
+    value_type: int
+  db_hit_count:
+    initial_value: 0
+    value_type: int
+  divisionbell_seconds_remaining:
+    initial_value: 90
+    value_type: int
+  divisionbell_mode_active:
+    initial_value: 0
+    value_type: int
+  db_post_cooldown:
     initial_value: 0
     value_type: int

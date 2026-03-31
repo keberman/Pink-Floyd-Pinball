@@ -1,11 +1,133 @@
 #config_version=6
-
-#animals mode. hit the 7 standup targets, then 60 seconds to hit the vuk to 
-#activate the mode. if mode is activated, hit both of the center playfield drop
-#targets 3 times to complete the mode. if mode is not started within the 60 second
-#time limit then all 7 targets reset.
-
+ 
+#==============================================================================
+# ANIMALS MODE
+# Pink Floyd: Animals (1977) — Pigs (Three Different Ones)
+#
+# QUALIFY (game_logic.yaml): Hit all 5 wired stand-ups (I, M, AA, L, S)
+#   → animals_qualify_complete → pending_mode = animals → mode_start VUK window
+#
+# OBJECTIVE: 3 hits each on FLDT (dog) and FRDT (sheep) — one up at a time
+#   → Mode start: both knocked down, dog raises first
+#   → Hit dog → sheep raises, dog stays down
+#   → Hit sheep → dog raises, sheep stays down
+#   → 3 hits each (6 total alternating) → animals_mode_completed
+#   → Mode end (timer or drain): both knockdown coils fire
+#
+# WW#2: A (pf-8) and N (pf-9) NOT WIRED — qualify uses 5 targets only
+# TODO WW#3: Add s_a and s_n to qualify logic in game_logic.yaml
+#==============================================================================
+ 
 mode:
-  start_events: start_animals
-  stop_events: stop_animals
   priority: 200
+  start_events: start_animals
+  stop_events: timer_animals_timer_complete, animals_mode_completed, ball_ending
+ 
+timers:
+  animals_timer:
+    start_value: 90
+    end_value: 0
+    direction: down
+    control_events:
+      - event: mode_animals_started
+        action: reset
+      - event: mode_animals_started
+        action: start
+ 
+variable_player:
+  timer_animals_timer_tick:
+    animals_seconds_remaining:
+      action: set
+      int: ticks_remaining
+ 
+  animals_mode_completed:
+    animals_mode_active:
+      action: set
+      int: 0
+ 
+  mode_animals_started:
+    animals_fldt_hits:
+      action: set
+      int: 0
+    animals_frdt_hits:
+      action: set
+      int: 0
+    animals_last_hit:
+      action: set
+      string: inactive
+    animals_mode_active:
+      action: set
+      int: 1
+ 
+  # Increment hit counters — gated on last_hit to prevent double-counting a bounce
+  # s_<n>_active — no switch_ prefix
+  "s_fldt_active{current_player.active_main_mode == 'animals' and current_player.animals_last_hit != 'fldt'}":
+    animals_fldt_hits:
+      action: add
+      int: 1
+    animals_last_hit:
+      action: set
+      string: fldt
+ 
+  "s_frdt_active{current_player.active_main_mode == 'animals' and current_player.animals_last_hit != 'frdt'}":
+    animals_frdt_hits:
+      action: add
+      int: 1
+    animals_last_hit:
+      action: set
+      string: frdt
+ 
+# -------------------
+# EVENT PLAYER
+# -------------------
+ 
+event_player:
+  mode_animals_started:
+    - animals_knockdown_both
+    - animals_raise_dog|300ms
+ 
+# -------------------
+# COIL PLAYER
+# -------------------
+ 
+coil_player:
+  animals_knockdown_both:
+    c_fldt_knockdown: pulse
+    c_frdt_knockdown: pulse
+ 
+  animals_raise_dog:
+    c_fldt_dog: pulse
+ 
+  # s_<n>_active — no switch_ prefix
+  "s_fldt_active{current_player.active_main_mode == 'animals'}":
+    c_frdt_sheep: pulse
+ 
+  # Only raise dog if this is NOT the completing hit (frdt_hits < 2 at coil fire time,
+  # because variable_player hasn't settled yet when coil_player evaluates — Lesson 31).
+  # frdt_hits < 2 means: hit 1 (val=0) ✅ raise, hit 2 (val=1) ✅ raise, hit 3 (val=2) ❌ don't raise.
+  "s_frdt_active{current_player.active_main_mode == 'animals' and current_player.animals_frdt_hits < 2}":
+    c_fldt_dog: pulse
+ 
+  # Knockdown coils moved to game_logic.yaml coil_player (always-live)
+ 
+sound_player:
+  mode_animals_started:
+    pigs_trimmed:
+      bus: mode_music
+  animals_mode_completed:
+    pigs_trimmed:
+      action: stop
+      bus: mode_music
+  mode_animals_stopped:
+    pigs_trimmed:
+      action: stop
+      bus: mode_music
+ 
+slide_player:
+  mode_animals_started: animals
+  animals_mode_completed:
+    animals:
+      action: remove
+  mode_animals_stopped:
+    animals:
+      action: remove

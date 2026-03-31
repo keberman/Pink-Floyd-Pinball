@@ -1,11 +1,128 @@
 #config_version=6
-
-#division bell mode. hit pop bumbers 100 times. start 60 second timer to shoot
-#vuk. succesful vuk shot starts mode. upper appearing posts pop up depending on
-#orbit spinner hit to direct ball to pop bumpers. hit pop bumbers 20 more times
-#within 60 seconds to complete mode.
-
+ 
+#==============================================================================
+# DIVISION BELL MODE
+# Pink Floyd: The Division Bell (1994) — Keep Talking
+#
+# Qualify:    10 combined pop bumper hits (s_pop_1 + s_pop_2) — tuning pass later
+# Active:     Left orbit (s_left_spinner) fires right post (c_post_2)
+#             Right orbit (s_right_spinner) fires left post (c_post_1)
+#             Intent: deflect ball into pop nest
+# Completion: 15 combined pop bumper hits in 90 seconds — tuning pass later
+# Timer:      90s — No mercy.
+#
+# POST COOLDOWN: 5 seconds after each post fire. Prevents machine-gun firing
+# on multi-tick spinner events. Tune db_post_cooldown_reset delay (ms) here.
+#
+# NOTE: Post coil pulse lag experiment — add |Xms delay to coil_player entries
+# on s_left/right_spinner_active to tune deflection timing once hardware tested.
+#
+# db_hit_count increments here (divisionbell.yaml variable_player).
+# Completion threshold check lives in game_logic.yaml (always-live, Lesson 31/34).
+# divisionbell_mode_active cleared in game_logic.yaml on stop/completed (Lesson 34).
+#==============================================================================
+ 
 mode:
-  start_events: start_division_bell
-  stop_events: stop_division_bell
   priority: 200
+  start_events: start_divisionbell
+  stop_events: timer_divisionbell_timer_complete, divisionbell_mode_completed, ball_ending
+ 
+timers:
+  divisionbell_timer:
+    start_value: 90
+    end_value: 0
+    direction: down
+    control_events:
+      - event: mode_divisionbell_started
+        action: reset
+      - event: mode_divisionbell_started
+        action: start
+ 
+variable_player:
+  mode_divisionbell_started:
+    db_hit_count:
+      action: set
+      int: 0
+    divisionbell_mode_active:
+      action: set
+      int: 1
+    db_post_cooldown:
+      action: set
+      int: 0
+ 
+  # Count pop hits toward 15-hit completion threshold.
+  # Completion check (>= 15) lives in game_logic.yaml event_player — Lesson 31 pattern.
+  s_pop_1_active:
+    db_hit_count:
+      action: add
+      int: 1
+ 
+  s_pop_2_active:
+    db_hit_count:
+      action: add
+      int: 1
+ 
+  timer_divisionbell_timer_tick:
+    divisionbell_seconds_remaining:
+      action: set
+      int: ticks_remaining
+ 
+  # Post cooldown — set to 1 on first spinner hit, cleared after 5 seconds.
+  # Prevents machine-gun post firing on multi-tick spinner events.
+  # Tune the |5000ms delay on db_post_cooldown_reset in event_player below.
+  "s_left_spinner_active{current_player.db_post_cooldown == 0}":
+    db_post_cooldown:
+      action: set
+      int: 1
+ 
+  "s_right_spinner_active{current_player.db_post_cooldown == 0}":
+    db_post_cooldown:
+      action: set
+      int: 1
+ 
+  db_post_cooldown_reset:
+    db_post_cooldown:
+      action: set
+      int: 0
+ 
+event_player:
+  # Fire cooldown reset 5 seconds after each post fires.
+  # Only posts when cooldown is 0 — prevents stacking multiple resets.
+  "s_left_spinner_active{current_player.db_post_cooldown == 0}":
+    - db_post_cooldown_reset|5000ms
+ 
+  "s_right_spinner_active{current_player.db_post_cooldown == 0}":
+    - db_post_cooldown_reset|5000ms
+ 
+coil_player:
+  # Left orbit detected — fire right post to deflect ball into pop nest.
+  # Gated on cooldown == 0 — fires once per orbit pass, not once per spinner tick.
+  # Add |Xms delay here once pulse lag experiment is ready, e.g. s_left_spinner_active|300ms
+  "s_left_spinner_active{current_player.db_post_cooldown == 0}":
+    c_post_2: pulse
+ 
+  # Right orbit detected — fire left post to deflect ball into pop nest.
+  "s_right_spinner_active{current_player.db_post_cooldown == 0}":
+    c_post_1: pulse
+ 
+sound_player:
+  mode_divisionbell_started:
+    keep_talking_trimmed:
+      bus: mode_music
+  divisionbell_mode_completed:
+    keep_talking_trimmed:
+      action: stop
+      bus: mode_music
+  mode_divisionbell_stopped:
+    keep_talking_trimmed:
+      action: stop
+      bus: mode_music
+ 
+slide_player:
+  mode_divisionbell_started: divisionbell
+  divisionbell_mode_completed:
+    divisionbell:
+      action: remove
+  mode_divisionbell_stopped:
+    divisionbell:
+      action: remove

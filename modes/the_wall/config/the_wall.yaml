@@ -10,13 +10,25 @@
 #   Knock down all 6 again → BDT knocks down → hammer entrance opens
 #   Ball enters hammer entrance → travels subway → s_subway_opto fires → wall_mode_completed
 #
-# FAILURE: 90s timer expires → wall_clear, wall_mode_active resets, player can re-qualify
+# FAILURE: 90s timer expires → the_wall_stopped → wall_mode_active resets to 0
+#   Player can re-qualify from scratch — phase 1 check is clean.
 # s_subway_opto is the ONLY valid completion trigger.
 #
 # COMPLETION ROUTING:
 #   SUCCESS:  wall_mode_completed → game_logic clears active_main_mode directly
 #   FAILURE:  timer_wall_timer_complete → the_wall_stopped → game_logic clears active_main_mode
 #   These two paths are intentionally separate. wall_mode_completed does NOT fire the_wall_stopped.
+#
+# STACKING PROTECTION:
+#   Target hits only count when active_main_mode is 'inactive' (phase 1) or 'wall' (phase 2).
+#   Stray hits during bike or any other side mode are silently ignored.
+#   Physical bank resets on mode_bike_stopped (game_logic.yaml) keep hardware in sync.
+#
+# QUALIFY LOCKING:
+#   Phase 1 qualify_complete is additionally gated on pending_mode == 'inactive'.
+#   This implements first-in-wins — if another mode is already queued in mode_start,
+#   wall cannot fire wall_qualify_complete and overwrite the pending slot.
+#   Target progress is still tracked (hits accumulate) so no progress is lost.
  
 mode:
   start_events: ball_started
@@ -77,32 +89,34 @@ variable_player:
       int: 0
  
   # Track each target going down
-  s_wall_top_right_active:
+  # Condition: only count during phase 1 (inactive) or phase 2 (wall active)
+  # Stray hits during bike or any other side mode are silently ignored
+  "s_wall_top_right_active{current_player.active_main_mode == 'inactive' or current_player.active_main_mode == 'wall'}":
     wall_top_right_down:
       action: set
       int: 1
  
-  s_wall_top_center_active:
+  "s_wall_top_center_active{current_player.active_main_mode == 'inactive' or current_player.active_main_mode == 'wall'}":
     wall_top_center_down:
       action: set
       int: 1
  
-  s_wall_top_left_active:
+  "s_wall_top_left_active{current_player.active_main_mode == 'inactive' or current_player.active_main_mode == 'wall'}":
     wall_top_left_down:
       action: set
       int: 1
  
-  s_wall_bottom_right_active:
+  "s_wall_bottom_right_active{current_player.active_main_mode == 'inactive' or current_player.active_main_mode == 'wall'}":
     wall_bottom_right_down:
       action: set
       int: 1
  
-  s_wall_bottom_center_active:
+  "s_wall_bottom_center_active{current_player.active_main_mode == 'inactive' or current_player.active_main_mode == 'wall'}":
     wall_bottom_center_down:
       action: set
       int: 1
  
-  s_wall_bottom_left_active:
+  "s_wall_bottom_left_active{current_player.active_main_mode == 'inactive' or current_player.active_main_mode == 'wall'}":
     wall_bottom_left_down:
       action: set
       int: 1
@@ -125,14 +139,21 @@ variable_player:
       action: set
       int: 1
  
-  # Successful completion — reset mode active flag so player can re-qualify next ball
+  # Successful completion — reset mode active flag so player can re-qualify
   wall_mode_completed:
     wall_mode_active:
       action: set
       int: 0
  
-  # Clear target state only — wall_mode_active intentionally NOT cleared here
-  # wall_mode_active only resets on ball start or successful completion
+  # FAILURE path — timer expired. Reset wall_mode_active so phase 1 check fires
+  # correctly on re-qualify. Without this wall_mode_active stays 1 and the next
+  # 6 targets trigger phase 2 (hammer entrance) instead of phase 1 (VUK window).
+  the_wall_stopped:
+    wall_mode_active:
+      action: set
+      int: 0
+ 
+  # Clear target state only
   wall_clear:
     wall_top_right_down:
       action: set
@@ -210,8 +231,9 @@ event_player:
   s_wall_bottom_left_active:
     - check_wall_complete|50ms
  
-  # PHASE 1 — All 6 down, mode not yet active → qualify, open VUK window
-  "check_wall_complete{current_player.wall_top_right_down == 1 and current_player.wall_top_center_down == 1 and current_player.wall_top_left_down == 1 and current_player.wall_bottom_right_down == 1 and current_player.wall_bottom_center_down == 1 and current_player.wall_bottom_left_down == 1 and current_player.wall_mode_active == 0}":
+  # PHASE 1 — All 6 down, mode not yet active, no other mode queued → qualify
+  # pending_mode == 'inactive' ensures first-in-wins locking across all modes
+  "check_wall_complete{current_player.wall_top_right_down == 1 and current_player.wall_top_center_down == 1 and current_player.wall_top_left_down == 1 and current_player.wall_bottom_right_down == 1 and current_player.wall_bottom_center_down == 1 and current_player.wall_bottom_left_down == 1 and current_player.wall_mode_active == 0 and current_player.pending_mode == 'inactive'}":
     - wall_qualify_complete
  
   # PHASE 2 — All 6 down, mode active → open hammer entrance
@@ -231,8 +253,6 @@ event_player:
     - post_vuk_eject
  
   # VALID COMPLETION — subway opto while qualified
-  # wall_mode_completed fires here. game_logic handles clear_active_mode directly.
-  # Do NOT fire the_wall_stopped here — that is reserved for timer expiry only.
   "s_subway_opto_active{current_player.wall_qualified == 1}":
     - fire_upper_reset
     - fire_lower_reset|200ms

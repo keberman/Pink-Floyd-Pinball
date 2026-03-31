@@ -12,6 +12,27 @@ mode:
 # Handles active_main_mode tracking and completion counts.
 # clear_active_mode is triggered directly by *_mode_completed events (success path)
 # and by *_stopped events (timer expiry / failure path).
+#
+# DESIGN: Modes are parallel, not hierarchical.
+# Bike is a side mode that always runs its full 60 seconds regardless of
+# which main mode is active. stop_bike is never fired by main mode activation.
+# WW#2 NOTE: Wall bank resets still fire on mode_bike_stopped as a hardware
+# workaround — 3-banks have no individual coil control. Removed in WW#3
+# when smart single drops replace both banks.
+#
+# ⚠️ LESSON: event_player conditions evaluate BEFORE variable_player updates
+# settle for the same event. Use a delayed check event (|50ms) — same pattern
+# as check_wall_complete in the_wall.yaml — so vars are set before condition runs.
+#
+# QUALIFY GATING: all qualify conditions gate on BOTH active_main_mode == 'inactive'
+# AND pending_mode == 'inactive'. This implements first-in-wins locking —
+# once any mode is queued in mode_start, no other mode can qualify or overwrite
+# the pending slot. Progress vars are preserved (hits still tracked) but
+# qualify_complete cannot fire until the slot clears.
+#
+# ⚠️ LESSON 34 APPLIES TO PENDING_MODE RESET: mode_start.yaml resets pending_mode
+# on mode_start_stopped in its own variable_player — but that handler is dead by
+# the time the event fires. Reset is handled here in game_logic.yaml (always-live).
  
 variable_player:
   set_active_mode_wall:
@@ -59,6 +80,14 @@ variable_player:
       action: set
       string: inactive
  
+  # Reset pending_mode here (not in mode_start.yaml) — game_logic is always-live.
+  # mode_start.yaml's own variable_player handler is dead on mode_start_stopped.
+  # See Lesson 34.
+  mode_start_stopped:
+    pending_mode:
+      action: set
+      string: inactive
+ 
   wall_mode_completed:
     wall_complete_count:
       action: add
@@ -83,32 +112,143 @@ variable_player:
     divisionbell_complete_count:
       action: add
       int: 1
+    divisionbell_mode_active:
+      action: set
+      int: 0
+ 
+  mode_divisionbell_stopped:
+    divisionbell_mode_active:
+      action: set
+      int: 0
  
   eclipse_mode_completed:
     eclipse_complete_count:
       action: add
       int: 1
  
+  # --- ANIMALS QUALIFY: track 5 stand-up target hits ---
+  # Gated on both active_main_mode and pending_mode — first-in-wins locking.
+  "s_i_active{current_player.active_main_mode == 'inactive' and current_player.pending_mode == 'inactive'}":
+    animals_target_i:
+      action: set
+      int: 1
+ 
+  "s_m_active{current_player.active_main_mode == 'inactive' and current_player.pending_mode == 'inactive'}":
+    animals_target_m:
+      action: set
+      int: 1
+ 
+  "s_aa_active{current_player.active_main_mode == 'inactive' and current_player.pending_mode == 'inactive'}":
+    animals_target_a:
+      action: set
+      int: 1
+ 
+  "s_l_active{current_player.active_main_mode == 'inactive' and current_player.pending_mode == 'inactive'}":
+    animals_target_l:
+      action: set
+      int: 1
+ 
+  "s_s_active{current_player.active_main_mode == 'inactive' and current_player.pending_mode == 'inactive'}":
+    animals_target_s:
+      action: set
+      int: 1
+ 
+  # Reset target vars after qualify fires — clean state for re-qualify
+  # Also set pending_mode here (not in animals.yaml) — game_logic runs all-ball
+  # so this variable_player is live when qualify fires. See Lesson 33.
+  animals_qualify_complete:
+    pending_mode:
+      action: set
+      string: animals
+    animals_target_i:
+      action: set
+      int: 0
+    animals_target_m:
+      action: set
+      int: 0
+    animals_target_a:
+      action: set
+      int: 0
+    animals_target_l:
+      action: set
+      int: 0
+    animals_target_s:
+      action: set
+      int: 0
+ 
+  # --- WYWH QUALIFY: track 4 spinner hits ---
+  # Gated on both active_main_mode and pending_mode — first-in-wins locking.
+  # Qualify flags persist across balls — player carries partial progress forward.
+  "s_left_spinner_active{current_player.active_main_mode == 'inactive' and current_player.pending_mode == 'inactive'}":
+    wywh_spinner_left:
+      action: set
+      int: 1
+ 
+  "s_right_spinner_active{current_player.active_main_mode == 'inactive' and current_player.pending_mode == 'inactive'}":
+    wywh_spinner_right:
+      action: set
+      int: 1
+ 
+  "s_left_hs_spinner_active{current_player.active_main_mode == 'inactive' and current_player.pending_mode == 'inactive'}":
+    wywh_spinner_left_hs:
+      action: set
+      int: 1
+ 
+  "s_right_hs_spinner_active{current_player.active_main_mode == 'inactive' and current_player.pending_mode == 'inactive'}":
+    wywh_spinner_right_hs:
+      action: set
+      int: 1
+ 
+  # Reset qualify flags and spin count after qualify fires — clean state for re-qualify.
+  # Set pending_mode here (not in wywh.yaml) — game_logic runs all-ball. See Lesson 33.
+  wywh_qualify_complete:
+    pending_mode:
+      action: set
+      string: wywh
+    wywh_spinner_left:
+      action: set
+      int: 0
+    wywh_spinner_right:
+      action: set
+      int: 0
+    wywh_spinner_left_hs:
+      action: set
+      int: 0
+    wywh_spinner_right_hs:
+      action: set
+      int: 0
+    wywh_spin_count:
+      action: set
+      int: 0
+ 
+  # --- DIVISION BELL QUALIFY: track combined pop bumper hits ---
+  # Counter-based (not flag-based) — increments on each hit toward threshold of 10.
+  # Gated on both active_main_mode and pending_mode — first-in-wins locking.
+  # Progress persists across balls — player carries partial qualify forward.
+  "s_pop_1_active{current_player.active_main_mode == 'inactive' and current_player.pending_mode == 'inactive'}":
+    db_pop_qualify_hits:
+      action: add
+      int: 1
+ 
+  "s_pop_2_active{current_player.active_main_mode == 'inactive' and current_player.pending_mode == 'inactive'}":
+    db_pop_qualify_hits:
+      action: add
+      int: 1
+ 
+  # Reset qualify counter after qualify fires — clean state for re-qualify.
+  # Set pending_mode here (not in divisionbell.yaml) — game_logic runs all-ball. See Lesson 33.
+  divisionbell_qualify_complete:
+    pending_mode:
+      action: set
+      string: divisionbell
+    db_pop_qualify_hits:
+      action: set
+      int: 0
+ 
  
 # -------------------
 # EVENT PLAYER
 # -------------------
-#
-# COMPLETION ROUTING PATTERN (applies to all modes):
-#
-#   The Wall (custom mode — runs all ball):
-#     SUCCESS path:  wall_mode_completed → clear_active_mode (direct, handled below)
-#     FAILURE path:  the_wall_stopped    → clear_active_mode (timer expiry only)
-#
-#   Other main modes (standard MPF modes — start/stop normally):
-#     SUCCESS path:  *_mode_completed → clear_active_mode (direct, handled below)
-#     STOP path:     mode_*_stopped   → clear_active_mode (covers both success and failure)
-#
-#   Bike / High Hopes / Eclipse (standard MPF modes):
-#     STOP path:     mode_*_stopped   → clear_active_mode
-#
-# NOTE: *_mode_completed events must NEVER fire themselves. The variable_player
-# block above handles the count increment. No event_player entry for self-firing.
  
 event_player:
  
@@ -131,6 +271,12 @@ event_player:
   mode_bike_started:
     - set_active_mode_bike
  
+  mode_bike_stopped:
+    - clear_active_mode
+    - fire_upper_reset
+    - fire_lower_reset
+    - fire_hammer_reset
+ 
   mode_high_hopes_started:
     - set_active_mode_high_hopes
  
@@ -138,12 +284,9 @@ event_player:
     - set_active_mode_eclipse
  
   # --- CLEAR ACTIVE MODE — SUCCESS PATHS ---
-  # wall_mode_completed fires when subway opto triggers with wall_qualified == 1
-  # This is the direct success path — does NOT go through the_wall_stopped
   wall_mode_completed:
     - clear_active_mode
  
-  # Standard modes clear on their own completed event (fired by each mode's yaml)
   dsotm_mode_completed:
     - clear_active_mode
  
@@ -157,25 +300,32 @@ event_player:
     - clear_active_mode
  
   # --- CLEAR ACTIVE MODE — FAILURE / STOP PATHS ---
-  # the_wall_stopped fires ONLY on timer expiry (not on successful completion)
   the_wall_stopped:
     - clear_active_mode
  
-  # Standard modes also clear when stopped (covers timer expiry and any other stop)
   mode_dsotm_stopped:
     - clear_active_mode
  
   mode_animals_stopped:
     - clear_active_mode
+    - wall_clear
+    - fire_upper_reset
+    - fire_lower_reset|200ms
+    - fire_hammer_reset|400ms
  
   mode_wywh_stopped:
     - clear_active_mode
+    - wall_clear
+    - fire_upper_reset
+    - fire_lower_reset|200ms
+    - fire_hammer_reset|400ms
  
   mode_divisionbell_stopped:
     - clear_active_mode
- 
-  mode_bike_stopped:
-    - clear_active_mode
+    - wall_clear
+    - fire_upper_reset
+    - fire_lower_reset|200ms
+    - fire_hammer_reset|400ms
  
   mode_high_hopes_stopped:
     - clear_active_mode
@@ -183,9 +333,102 @@ event_player:
   mode_eclipse_stopped:
     - clear_active_mode
  
+  # --- ANIMALS QUALIFY: post delayed check event on each target hit ---
+  # Same pattern as check_wall_complete in the_wall.yaml.
+  # 50ms delay ensures variable_player updates settle before condition evaluates.
+  # Gated on both active_main_mode and pending_mode — first-in-wins locking.
+  "s_i_active{current_player.active_main_mode == 'inactive' and current_player.pending_mode == 'inactive'}":
+    - check_animals_qualify|50ms
+ 
+  "s_m_active{current_player.active_main_mode == 'inactive' and current_player.pending_mode == 'inactive'}":
+    - check_animals_qualify|50ms
+ 
+  "s_aa_active{current_player.active_main_mode == 'inactive' and current_player.pending_mode == 'inactive'}":
+    - check_animals_qualify|50ms
+ 
+  "s_l_active{current_player.active_main_mode == 'inactive' and current_player.pending_mode == 'inactive'}":
+    - check_animals_qualify|50ms
+ 
+  "s_s_active{current_player.active_main_mode == 'inactive' and current_player.pending_mode == 'inactive'}":
+    - check_animals_qualify|50ms
+ 
+  # --- ANIMALS QUALIFY COMPLETE: evaluated 50ms after each target hit ---
+  # By this point variable_player has already updated the target var.
+  "check_animals_qualify{current_player.animals_target_i==1 and current_player.animals_target_m==1 and current_player.animals_target_a==1 and current_player.animals_target_l==1 and current_player.animals_target_s==1 and current_player.active_main_mode=='inactive' and current_player.pending_mode=='inactive'}":
+    - animals_qualify_complete
+ 
+  # --- ANIMALS MODE COMPLETION ---
+  "s_fldt_active{current_player.animals_fldt_hits>=3 and current_player.animals_frdt_hits>=3 and current_player.active_main_mode=='animals'}":
+    - animals_mode_completed
+ 
+  "s_frdt_active{current_player.animals_fldt_hits>=3 and current_player.animals_frdt_hits>=3 and current_player.active_main_mode=='animals'}":
+    - animals_mode_completed
+ 
+  # --- WYWH QUALIFY: post delayed check event on each spinner hit ---
+  # 50ms delay ensures variable_player updates settle before condition evaluates.
+  # Gated on both active_main_mode and pending_mode — first-in-wins locking.
+  "s_left_spinner_active{current_player.active_main_mode == 'inactive' and current_player.pending_mode == 'inactive'}":
+    - check_wywh_qualify|50ms
+ 
+  "s_right_spinner_active{current_player.active_main_mode == 'inactive' and current_player.pending_mode == 'inactive'}":
+    - check_wywh_qualify|50ms
+ 
+  "s_left_hs_spinner_active{current_player.active_main_mode == 'inactive' and current_player.pending_mode == 'inactive'}":
+    - check_wywh_qualify|50ms
+ 
+  "s_right_hs_spinner_active{current_player.active_main_mode == 'inactive' and current_player.pending_mode == 'inactive'}":
+    - check_wywh_qualify|50ms
+ 
+  # --- WYWH QUALIFY COMPLETE: evaluated 50ms after each spinner hit ---
+  "check_wywh_qualify{current_player.wywh_spinner_left==1 and current_player.wywh_spinner_right==1 and current_player.wywh_spinner_left_hs==1 and current_player.wywh_spinner_right_hs==1 and current_player.active_main_mode=='inactive' and current_player.pending_mode=='inactive'}":
+    - wywh_qualify_complete
+ 
+  # --- WYWH COMPLETION: post delayed check on each spinner hit during mode ---
+  # Spin count increments happen in wywh.yaml variable_player.
+  # 50ms delay ensures count has settled before threshold check.
+  "s_left_spinner_active{current_player.active_main_mode == 'wywh'}":
+    - check_wywh_complete|50ms
+ 
+  "s_right_spinner_active{current_player.active_main_mode == 'wywh'}":
+    - check_wywh_complete|50ms
+ 
+  "s_left_hs_spinner_active{current_player.active_main_mode == 'wywh'}":
+    - check_wywh_complete|50ms
+ 
+  "s_right_hs_spinner_active{current_player.active_main_mode == 'wywh'}":
+    - check_wywh_complete|50ms
+ 
+  # --- WYWH COMPLETION CHECK: fires wywh_mode_completed when 20 spins reached ---
+  "check_wywh_complete{current_player.wywh_spin_count >= 20 and current_player.active_main_mode == 'wywh'}":
+    - wywh_mode_completed
+ 
+  # --- DIVISION BELL QUALIFY: post delayed check on each pop hit ---
+  # 50ms delay ensures variable_player (db_pop_qualify_hits add) settles first.
+  # Gated on both active_main_mode and pending_mode — first-in-wins locking.
+  "s_pop_1_active{current_player.active_main_mode == 'inactive' and current_player.pending_mode == 'inactive'}":
+    - check_db_qualify|50ms
+ 
+  "s_pop_2_active{current_player.active_main_mode == 'inactive' and current_player.pending_mode == 'inactive'}":
+    - check_db_qualify|50ms
+ 
+  # --- DIVISION BELL QUALIFY COMPLETE: evaluated 50ms after each pop hit ---
+  "check_db_qualify{current_player.db_pop_qualify_hits >= 10 and current_player.active_main_mode == 'inactive' and current_player.pending_mode == 'inactive'}":
+    - divisionbell_qualify_complete
+ 
+  # --- DIVISION BELL COMPLETION: post delayed check on each pop hit during mode ---
+  # db_hit_count increments in divisionbell.yaml variable_player.
+  # 50ms delay ensures count has settled before threshold check.
+  "s_pop_1_active{current_player.active_main_mode == 'divisionbell'}":
+    - check_db_complete|50ms
+ 
+  "s_pop_2_active{current_player.active_main_mode == 'divisionbell'}":
+    - check_db_complete|50ms
+ 
+  # --- DIVISION BELL COMPLETION CHECK: fires divisionbell_mode_completed at 15 hits ---
+  "check_db_complete{current_player.db_hit_count >= 15 and current_player.active_main_mode == 'divisionbell'}":
+    - divisionbell_mode_completed
+ 
   # --- ECLIPSE QUALIFICATION CHECK ---
-  # Fires eclipse_qualified when all 5 main modes have been completed at least once.
-  # Checked on each mode_completed event in case the final completion triggers it.
   "wall_mode_completed{current_player.wall_complete_count >= 1 and current_player.dsotm_complete_count >= 1 and current_player.animals_complete_count >= 1 and current_player.wywh_complete_count >= 1 and current_player.divisionbell_complete_count >= 1}":
     - eclipse_qualified
  
@@ -200,3 +443,30 @@ event_player:
  
   "divisionbell_mode_completed{current_player.wall_complete_count >= 1 and current_player.dsotm_complete_count >= 1 and current_player.animals_complete_count >= 1 and current_player.wywh_complete_count >= 1 and current_player.divisionbell_complete_count >= 1}":
     - eclipse_qualified
+ 
+# -------------------
+# COIL PLAYER
+# -------------------
+# Knockdown coils handled here, not in animals.yaml, because:
+# - mode_animals_stopped fires AFTER mode stops (handlers already gone)
+# - animals_mode_completed is a stop_events trigger — race condition
+# game_logic runs all-ball so its coil_player is always live.
+#
+# Three entries cover all cases:
+# - animals_mode_completed: successful 6-hit completion
+# - mode_animals_stopped:   timer expiry failure path
+# - ball_ending (conditioned): drain during animals — fires before any mode
+#   stop processing begins, winning the race that mode_animals_stopped loses
+ 
+coil_player:
+  animals_mode_completed:
+    c_fldt_knockdown: pulse
+    c_frdt_knockdown: pulse
+ 
+  mode_animals_stopped:
+    c_fldt_knockdown: pulse
+    c_frdt_knockdown: pulse
+ 
+  "ball_ending{current_player.active_main_mode == 'animals'}":
+    c_fldt_knockdown: pulse
+    c_frdt_knockdown: pulse

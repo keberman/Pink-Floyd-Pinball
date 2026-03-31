@@ -1,10 +1,87 @@
 #config_version=6
-
-#wish_you_were_here mode. spin all 4 wywh spinners 20 times. start 60 second timer
-#to shoot vuk. successful vuk shot starts mode. accumulate a total of 100 spins within
-#60 seconds with any combination of the 4 spinners to complete mode.
-
+ 
+#==============================================================================
+# WYWH MODE
+# Pink Floyd: Wish You Were Here (1975) — Wish You Were Here
+# Qualify: 1 hit each on all 4 spinners (s_left_spinner, s_right_spinner,
+#          s_left_hs_spinner, s_right_hs_spinner)
+# Objective: 20 cumulative spins on any spinner combination
+# Timer: 90s — No mercy.
+#==============================================================================
+ 
 mode:
-  start_events: start_wish_you_were_here
-  stop_events: stop_wish_you_were_here
   priority: 200
+  start_events: start_wywh
+  stop_events: timer_wywh_timer_complete, wywh_mode_completed, ball_ending
+ 
+timers:
+  wywh_timer:
+    start_value: 90
+    end_value: 0
+    direction: down
+    control_events:
+      - event: mode_wywh_started
+        action: reset
+      - event: mode_wywh_started
+        action: start
+ 
+variable_player:
+  mode_wywh_started:
+    wywh_mode_active:
+      action: set
+      int: 1
+    wywh_spin_count:
+      action: set
+      int: 0
+ 
+  timer_wywh_timer_tick:
+    wywh_seconds_remaining:
+      action: set
+      int: ticks_remaining
+ 
+  s_left_spinner_active:
+    wywh_spin_count:
+      action: add
+      int: 1
+ 
+  s_right_spinner_active:
+    wywh_spin_count:
+      action: add
+      int: 1
+ 
+  s_left_hs_spinner_active:
+    wywh_spin_count:
+      action: add
+      int: 1
+ 
+  s_right_hs_spinner_active:
+    wywh_spin_count:
+      action: add
+      int: 1
+ 
+  wywh_mode_completed:
+    wywh_mode_active:
+      action: set
+      int: 0
+ 
+sound_player:
+  mode_wywh_started:
+    wywh_trimmed:
+      bus: mode_music
+  wywh_mode_completed:
+    wywh_trimmed:
+      action: stop
+      bus: mode_music
+  mode_wywh_stopped:
+    wywh_trimmed:
+      action: stop
+      bus: mode_music
+ 
+slide_player:
+  mode_wywh_started: wywh
+  wywh_mode_completed:
+    wywh:
+      action: remove
+  mode_wywh_stopped:
+    wywh:
+      action: remove

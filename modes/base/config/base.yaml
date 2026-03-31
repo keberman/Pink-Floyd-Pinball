@@ -3,10 +3,10 @@
 mode:
   start_events: ball_starting
   priority: 100
-
+ 
 slide_player:
   mode_base_started: base
-
+ 
 #sound_player:
 # mode_base_started:
 #   base_radio:
@@ -14,7 +14,7 @@ slide_player:
 #  resume_base_radio:
 #    base_radio:
 #      bus: music
-
+ 
 variable_player:
   #rollovers
   s_left_inlane_active:
@@ -88,25 +88,31 @@ variable_player:
   #vuk
   s_vuk_opto_active:
     score: 5000
-
-shots:
-  bike_left_inlane:
-    switch: s_left_inlane
-  bike_right_inlane:
-    switch: s_right_inlane
-  bike_left_orbit:
-    switch: s_left_spinner
-
-shot_groups:
-  bike_qualify:
-    shots:
-      - bike_left_inlane
-      - bike_right_inlane
-    reset_events:
-      - mode_bike_started
-
+ 
+  # --- BIKE INLANE QUALIFY (player var method) ---
+  "s_left_inlane_active{current_player.active_main_mode == 'inactive' and current_player.pending_mode == 'inactive'}":
+    bike_left_inlane_hit:
+      action: set
+      int: 1
+ 
+  "s_right_inlane_active{current_player.active_main_mode == 'inactive' and current_player.pending_mode == 'inactive'}":
+    bike_right_inlane_hit:
+      action: set
+      int: 1
+ 
+  mode_bike_started:
+    bike_left_inlane_hit:
+      action: set
+      int: 0
+    bike_right_inlane_hit:
+      action: set
+      int: 0
+ 
 event_player:
-  "bike_qualify_complete{current_player.active_main_mode == 'inactive'}": start_bike
+  "player_bike_left_inlane_hit{current_player.bike_right_inlane_hit == 1 and current_player.pending_mode == 'inactive'}": start_bike
+  "player_bike_right_inlane_hit{current_player.bike_left_inlane_hit == 1 and current_player.pending_mode == 'inactive'}": start_bike
+ 
   mode_bike_stopped: resume_base_radio
-
   wall_mode_completed: resume_base_radio
+ 
+# REMOVED: shots, shot_groups blocks
